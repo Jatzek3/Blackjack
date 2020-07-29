@@ -13,7 +13,3 @@ const createPlayer = (name) => {
     return playerName
 
 }
-
-module.exports = {
-    createPlayer,
-  };

@@ -1,11 +1,7 @@
-import { createPlayer } from 
-console.log(createPlayer)
 
-let delearCards = document.querySelector(".dealer-cards")
-let dealerScore = document.querySelector('.dealer-score')
-let playerName = document.querySelector('.player-name')
-let playerCards = document.querySelector('.player-cards')
-let playerScore = document.querySelector('.player-score')
+let dealerNode = document.querySelector('.dealer-button')
+let playersNode = document.querySelector('.players')
+
 
 class Game {
     constructor(playerNames){
@@ -16,12 +12,11 @@ class Game {
 
     startGame(){
         if (this.playerNames.length === 1){
-            const dealer = new Dealer /*Napisac klasę deler? */
+            const dealer = new Dealer('Dealer')
             this.Players.push(dealer)
             const player = new Player(this.playerNames[0])
             this.Players.push(player)
-            console.log('run')
-            console.log(this.Players)
+
         }   
         else{
             this.singlePlayer = false
@@ -32,26 +27,53 @@ class Game {
         }
     setupPlayers(){
         if (this.singlePlayer){
-            // dealer setup
+            console.log(this.Players)
+            dealerNode.appendChild(this.Players[0].createPlayer())
+            playersNode.appendChild(this.Players[1].createPlayer())
+            console.log('this runs')
+        }else {
+        this.Players.map((player)=>
+        console.log(player))
+        // playersNode.appendChild(player.createPlayer))
         }
-        this.Players.map((Player)=> Player)
     }
     }
-
-
-class Dealer{
-
+    
+class Dealer {
+    constructor(name){
+    this.name = name
+    }
+    createPlayer(name= this.name) {
+        let playerName = document.createElement('div')
+        playerName.innerHTML =`${name}`
+        playerName.className = `${name}-player`
+        let cards = document.createElement('p')
+        cards.innerHTML = `${name}'s cards`
+        cards.className =` ${name}-cards`
+        let score = document.createElement('p')
+        score.innerHTML = "00"
+        score.className = `${name}-cards`
+        playerName.appendChild(cards)
+        playerName.appendChild(score)
+        return playerName
+    }
 }
 
 
-class Player {
+class Player extends Dealer{
     constructor(name){
+        super()
         this.name = name;
     }
 
 
+    
 }
-console.log('this runs')
+
+
+
+
 let newgame = new Game(['Jacek'])
 newgame.startGame()
+newgame.setupPlayers()
 
