@@ -33,8 +33,7 @@ class Game {
             console.log('this runs')
         }else {
         this.Players.map((player)=>
-        console.log(player))
-        // playersNode.appendChild(player.createPlayer))
+        playersNode.appendChild(player.createPlayer()))
         }
     }
     }
@@ -43,6 +42,8 @@ class Dealer {
     constructor(name){
     this.name = name
     }
+
+
     createPlayer(name= this.name) {
         let playerName = document.createElement('div')
         playerName.innerHTML =`${name}`
@@ -55,7 +56,18 @@ class Dealer {
         score.className = `${name}-cards`
         playerName.appendChild(cards)
         playerName.appendChild(score)
+            if (this instanceof Player) {
+            let hitButton = document.createElement("BUTTON")
+            hitButton.innerHTML = 'Hit Me!'
+            hitButton.className = `${name}-hit-button`
+            let passButton = document.createElement("BUTTON")
+            passButton.innerHTML = "Fold"
+            passButton.className = `${name}-fold-button`
+            playerName.appendChild(hitButton)
+            playerName.appendChild(passButton)
+            }
         return playerName
+
     }
 }
 
