@@ -6,7 +6,7 @@ let playersNode = document.querySelector('.players')
 class Game {
     constructor(playerNames){
         this.playerNames = playerNames
-        this.Players =[]
+        this.Players = []
         this.singlePlayer = true
     }
 
@@ -35,6 +35,20 @@ class Game {
         playersNode.appendChild(player.createPlayer()))
         }
     }
+
+    checkForWinner(){
+        if (this.singlePlayer){
+            if (this.Players[1].playerWon){
+                this.engGame()
+            }
+        }else {
+            // if there are/is a winnig player in all players end game
+            const winningPlayer = this.Players.filter((player)=> player.playerWon)
+            if (winningPlayer.length > 0){
+                this.engGame()
+            } 
+        }
+    }
     }
     
 class Dealer {
@@ -54,7 +68,7 @@ class Dealer {
         cards.className =`${name}-cards`
         let score = document.createElement('p')
         score.innerHTML = "00"
-        score.className = `${name}-cards`
+        score.className = `${name}-score`
         playerName.appendChild(cards)
         playerName.appendChild(score)
             if (this instanceof Player) {
@@ -62,7 +76,7 @@ class Dealer {
             hitButton.innerHTML = 'Hit Me!'
             hitButton.className = `${name}-hit-button`
             let passButton = document.createElement("BUTTON")
-            passButton.innerHTML = "Fold"
+            passButton.innerHTML = "Pass"
             passButton.className = `${name}-fold-button`
             playerName.appendChild(hitButton)
             playerName.appendChild(passButton)
@@ -77,21 +91,25 @@ class Player extends Dealer{
     constructor(name){
         super()
         this.name = name;
-        this.isActive = false
-        this.score = 0
-        this.passHandle = this.passHandle.bind(this)
+        this.score = 0;
+        this.isActive = false;
+        this.playerWon = false;
+        this.passHandle = this.passHandle.bind(this);
+        this.hitMeHandle = this.hitMeHandle.bind(this);
     }
 
 
     hitMeHandle(){
-        console.log('click handled')
+        this.score += Math.round(Math.random()* 11)
+        let playerScore = document.querySelector(`.${this.name}-score`)
+        playerScore.innerHTML = this.score
+        
     }
     passHandle(){
         console.log('click handled')
         console.log(this)
         this.endTurn()
         this.isActive = false
-
     }
 
 
@@ -100,24 +118,25 @@ class Player extends Dealer{
         let hitMeButton = document.querySelector(`.${name}-hit-button`)
         let passButton = document.querySelector(`.${name}-fold-button`)
 
-        hitMeButton.addEventListener('click', this.hitMeHandle)
-        passButton.addEventListener('click', this.passHandle)
+        hitMeButton.addEventListener('click',this.hitMeHandle)
+        passButton.addEventListener('click',this.passHandle )
         this.hitMeHandle()
         this.hitMeHandle()
+        if (this.score == 22){
+            this.playerWon = true
+        }
     }
 
     endTurn(name=this.name){
         console.log('turn ended')
         let hitMeButton = document.querySelector(`.${name}-hit-button`)
         let passButton = document.querySelector(`.${name}-fold-button`)
-        
+
         hitMeButton.removeEventListener('click', this.hitMeHandle)
         passButton.removeEventListener('click', this.passHandle)
     }
 
 }
-
-
 
 
 let newgame = new Game(['Jacek'])
