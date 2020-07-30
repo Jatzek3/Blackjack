@@ -38,6 +38,10 @@ class Game {
     }
 
     checkForWinnerOnStart(){
+        let playersLeft = this.Players.filter(player => player.score< 22)
+        if (playersLeft.length === 1){
+            playersLeft[0].playerWon = true
+        }
         if (this.singlePlayer){
             if (this.Players[0].playerWon){
                 this.endGame()
@@ -49,8 +53,30 @@ class Game {
                 this.endGame()
             } 
         }
+
     }
+    checkForWinnerOnGameEnd(){
+        if (this.singlePlayer){
+           this.Players[0].score > this.Players[1]?alert('You Won'):alert('Dealer have won')
+        } else {
+            let tie = false
+            let maxScore = 0;
+            let winnerName ='';
+            for (let i = 0; i < this.Players.length; i += 1){
+                if (this.Players[i].score > maxScore){
+                    maxScore = this.Players[i].score
+                    winnerName = this.Players[i].name
+                    tie = false
+                }
+                else if (this.Players[i].score === maxScore){
+                    tie = true
+                }
+            }
+        }    
+
     }
+}
+
     
 class Dealer {
     constructor(name){
@@ -65,9 +91,7 @@ class Dealer {
         console.log('dealer turn runs')
         let playerScore = document.getElementsByTagName('p')
         let scoreToHit = playerScore[1].innerHTML
-        console.log(scoreToHit)
         while (this.score > scoreToHit){
-            console.log('loop runs')
             this.score += Math.round(Math.random()* 11)
         }
         if (this.score > 21){
