@@ -16,8 +16,6 @@ class Game {
             this.Players.push(player)
             const dealer = new Dealer('Dealer')
             this.Players.push(dealer)
-
-
         }   
         else{
             this.singlePlayer = false
@@ -25,7 +23,7 @@ class Game {
                 this.Players.push(new Player(this.playerNames[i]))
             }
         }
-        }
+    }
 
     setupPlayers(){
         if (this.singlePlayer){
