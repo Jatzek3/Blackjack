@@ -163,16 +163,20 @@ class Player extends Dealer{
             if (this.score > 21){
                 this.playerLost = true
             }
-            gameArray[gameIndexCounter].playersIterator.next()
             this.endTurn()
+            gameArray[gameIndexCounter].playersIterator.next()
+
         }
     }
 
     passHandle(){
         this.endTurn()
         if (gameArray[gameIndexCounter].singlePlayer){
-        let  value  = gameArray[gameIndexCounter].playersIterator.next()
-        value.value.dealerTurn()
+            let  object  = gameArray[gameIndexCounter].playersIterator.next()
+            object.value.dealerTurn()
+        } else {
+            let  object  = gameArray[gameIndexCounter].playersIterator.next()
+            object.value.startTurn()
         }
 
     }
@@ -217,7 +221,7 @@ const initialization = () => {
             gameArray.push(new Game(playerNames))
         } else {
             for (let i = 0; i < +singleOrMulti; i++ ){
-                playerNames.push(`Player ${i+1}`)
+                playerNames.push(`Player${i+1}`)
             }
             gameArray.push(new Game(playerNames))
         }
@@ -227,7 +231,15 @@ const initialization = () => {
 initialization()
 gameArray[gameIndexCounter].startGame()
 gameArray[gameIndexCounter].setupPlayers()
-gameArray[gameIndexCounter].Players[1].startTurn()
+if (gameArray[gameIndexCounter].singlePlayer){
+    gameArray[gameIndexCounter].Players[1].startTurn()
+} else {
+    let  object  = gameArray[gameIndexCounter].playersIterator.next()
+    object.value.startTurn()
+}
+
+
+
 
 // let newgame = new Game(['Jacek'])
 // newgame.startGame()
