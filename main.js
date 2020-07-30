@@ -8,6 +8,9 @@ class Game {
         this.playerNames = playerNames
         this.Players = []
         this.singlePlayer = true
+        this.winner = ''
+        // Iterator for looping through players
+        this.playersIterator = this.Players[Symbol.iterator](); 
     }
 
     startGame(){
@@ -38,28 +41,32 @@ class Game {
     checkForWinnerOnStart(){
         let playersLeft = this.Players.filter(player => player.score< 22)
         if (playersLeft.length === 1){
+            this.winner = playersLeft[0].name
             playersLeft[0].playerWon = true
+            this.endGame()
         }
         if (this.singlePlayer){
             if (this.Players[0].playerWon){
+                this.winner = this.Players[0].name
                 this.endGame()
             }
         }else {
             // if there are/is a winnig player in all players end game
             const winningPlayer = this.Players.filter((player)=> player.playerWon)
             if (winningPlayer.length > 0){
+                this.winner = winningPlayer[0].name
                 this.endGame()
             } 
         }
 
     }
     checkForWinnerOnGameEnd(){
+        let winnerName='';
         if (this.singlePlayer){
-           this.Players[0].score > this.Players[1]?alert('You Won'):alert('Dealer have won')
+           this.Players[0].score > this.Players[1]?this.winner = this.Players[0].name:this.winner = this.Players[1].name
         } else {
             let tie = false
             let maxScore = 0;
-            let winnerName ='';
             for (let i = 0; i < this.Players.length; i += 1){
                 if (this.Players[i].score > maxScore){
                     maxScore = this.Players[i].score
@@ -70,8 +77,11 @@ class Game {
                     tie = true
                 }
             }
-        }    
-
+        }
+        tie?this.winner ="It's a tie":this.winner = winnerName
+    }
+    endGame(){
+        // Fuction goes here
     }
 }
 
@@ -129,7 +139,7 @@ class Player extends Dealer{
     constructor(name){
         super()
         this.name = name;
-        this.score = 13;
+        this.score = 0;
         this.isActive = false;
         this.playerWon = false;
         this.playerLost = false
@@ -152,6 +162,7 @@ class Player extends Dealer{
     }
 
     passHandle(){
+        // Next player turn???
         this.endTurn()
     }
 
@@ -177,6 +188,7 @@ class Player extends Dealer{
 
         hitMeButton.removeEventListener('click', this.hitMeHandle)
         passButton.removeEventListener('click', this.passHandle)
+        // tutaj iterator?
     }
 
 }
@@ -185,7 +197,9 @@ class Player extends Dealer{
 let newgame = new Game(['Jacek'])
 newgame.startGame()
 newgame.setupPlayers()
-console.log(newgame.Players)
-newgame.Players[0].startTurn()
-console.log(newgame.Players[1])
-newgame.Players[1].dealerTurn()
+//  Loop
+newgame.Players[0].startTurn() // Or dealer if Singleplayer
+newgame.checkForWinnerOnStart()
+
+console.log(newgame.playersIterator.next())
+
