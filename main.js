@@ -15,10 +15,11 @@ class Game {
 
     startGame(){
         if (this.playerNames.length === 1){
-            const player = new Player(this.playerNames[0])
-            this.Players.push(player)
             const dealer = new Dealer('Dealer')
             this.Players.push(dealer)
+            const player = new Player(this.playerNames[0])
+            this.Players.push(player)
+
         }   
         else{
             this.singlePlayer = false
@@ -98,9 +99,13 @@ class Dealer {
     dealerTurn (){
         console.log('dealer turn runs')
         let playerScore = document.getElementsByTagName('p')
-        let scoreToHit = playerScore[1].innerHTML
-        while (this.score > scoreToHit){
+        let scoreToHit = playerScore[3].innerHTML
+        console.log(scoreToHit)
+        while (this.score < scoreToHit){
+            console.log('this runs')
             this.score += Math.round(Math.random()* 11)
+            let dealerScore = document.querySelector('.Dealer-score')
+            dealerScore.innerHTML = this.score
         }
         if (this.score > 21){
             this.playerLost = true
@@ -149,6 +154,7 @@ class Player extends Dealer{
 
 
     hitMeHandle(){
+        console.log('hitmehandle')
         this.score += Math.round(Math.random()* 11)
         let playerScore = document.querySelector(`.${this.name}-score`)
         playerScore.innerHTML = this.score
@@ -157,13 +163,18 @@ class Player extends Dealer{
             if (this.score > 21){
                 this.playerLost = true
             }
+            gameArray[gameIndexCounter].playersIterator.next()
             this.endTurn()
         }
     }
 
     passHandle(){
-        // Next !!!
         this.endTurn()
+        if (gameArray[gameIndexCounter].singlePlayer){
+        let  value  = gameArray[gameIndexCounter].playersIterator.next()
+        value.value.dealerTurn()
+        }
+
     }
 
 
@@ -213,10 +224,10 @@ const initialization = () => {
         
     }
 }
-
 initialization()
-console.log(gameArray)
-console.log(gameArray[0])
+gameArray[gameIndexCounter].startGame()
+gameArray[gameIndexCounter].setupPlayers()
+gameArray[gameIndexCounter].Players[1].startTurn()
 
 // let newgame = new Game(['Jacek'])
 // newgame.startGame()
