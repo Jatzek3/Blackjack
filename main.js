@@ -12,10 +12,11 @@ class Game {
 
     startGame(){
         if (this.playerNames.length === 1){
-            const dealer = new Dealer('Dealer')
-            this.Players.push(dealer)
             const player = new Player(this.playerNames[0])
             this.Players.push(player)
+            const dealer = new Dealer('Dealer')
+            this.Players.push(dealer)
+
 
         }   
         else{
@@ -25,9 +26,9 @@ class Game {
             }
         }
         }
+
     setupPlayers(){
         if (this.singlePlayer){
-            console.log(this.Players)
             dealerNode.appendChild(this.Players[0].createPlayer())
             playersNode.appendChild(this.Players[1].createPlayer())
         }else {
@@ -36,16 +37,16 @@ class Game {
         }
     }
 
-    checkForWinner(){
+    checkForWinnerOnStart(){
         if (this.singlePlayer){
-            if (this.Players[1].playerWon){
-                this.engGame()
+            if (this.Players[0].playerWon){
+                this.endGame()
             }
         }else {
             // if there are/is a winnig player in all players end game
             const winningPlayer = this.Players.filter((player)=> player.playerWon)
             if (winningPlayer.length > 0){
-                this.engGame()
+                this.endGame()
             } 
         }
     }
@@ -56,6 +57,22 @@ class Dealer {
     this.name = name
     this.isActive = false
     this.score = 0
+    this.playerLost = false
+    this.playerWon = false
+    }
+    
+    dealerTurn (){
+        console.log('dealer turn runs')
+        let playerScore = document.getElementsByTagName('p')
+        let scoreToHit = playerScore[1].innerHTML
+        console.log(scoreToHit)
+        while (this.score > scoreToHit){
+            console.log('loop runs')
+            this.score += Math.round(Math.random()* 11)
+        }
+        if (this.score > 21){
+            this.playerLost = true
+        }
     }
 
 
@@ -82,7 +99,6 @@ class Dealer {
             playerName.appendChild(passButton)
             }
         return playerName
-
     }
 }
 
@@ -91,9 +107,10 @@ class Player extends Dealer{
     constructor(name){
         super()
         this.name = name;
-        this.score = 0;
+        this.score = 13;
         this.isActive = false;
         this.playerWon = false;
+        this.playerLost = false
         this.passHandle = this.passHandle.bind(this);
         this.hitMeHandle = this.hitMeHandle.bind(this);
     }
@@ -103,18 +120,22 @@ class Player extends Dealer{
         this.score += Math.round(Math.random()* 11)
         let playerScore = document.querySelector(`.${this.name}-score`)
         playerScore.innerHTML = this.score
-        
+        if (this.score >= 21){
+            this.isActive = false
+            if (this.score > 21){
+                this.playerLost = true
+            }
+            this.endTurn()
+        }
     }
+
     passHandle(){
-        console.log('click handled')
-        console.log(this)
         this.endTurn()
-        this.isActive = false
     }
 
 
     startTurn(name = this.name) {
-        console.log('turn started')
+        this.isActive =true 
         let hitMeButton = document.querySelector(`.${name}-hit-button`)
         let passButton = document.querySelector(`.${name}-fold-button`)
 
@@ -128,7 +149,7 @@ class Player extends Dealer{
     }
 
     endTurn(name=this.name){
-        console.log('turn ended')
+        this.isActive = false
         let hitMeButton = document.querySelector(`.${name}-hit-button`)
         let passButton = document.querySelector(`.${name}-fold-button`)
 
@@ -143,4 +164,6 @@ let newgame = new Game(['Jacek'])
 newgame.startGame()
 newgame.setupPlayers()
 console.log(newgame.Players)
-newgame.Players[1].startTurn()
+newgame.Players[0].startTurn()
+console.log(newgame.Players[1])
+newgame.Players[1].dealerTurn()
