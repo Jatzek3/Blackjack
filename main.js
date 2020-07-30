@@ -81,7 +81,7 @@ class Game {
         tie?this.winner ="It's a tie":this.winner = winnerName
     }
     endGame(){
-        // Fuction goes here
+        // Function goes here
     }
 }
 
@@ -162,7 +162,7 @@ class Player extends Dealer{
     }
 
     passHandle(){
-        // Next player turn???
+        // Next !!!
         this.endTurn()
     }
 
@@ -188,18 +188,42 @@ class Player extends Dealer{
 
         hitMeButton.removeEventListener('click', this.hitMeHandle)
         passButton.removeEventListener('click', this.passHandle)
-        // tutaj iterator?
     }
 
 }
 
+let gameArray = []
+let gameIndexCounter = -1
+const initialization = () => {
+    let agreement = prompt('Do you want to play a game?','Yes')
+    if (agreement){
+        let playerNames = []
+        gameIndexCounter += 1
+        let hero = prompt('What is Your Name', 'Hero')
+        playerNames.push(hero)
+        let singleOrMulti = prompt('If You want to play aginst the dealer enter yes. If you want to play with friends enter a number of other player', 'yes')
+        if (singleOrMulti.toLowerCase == 'yes'){
+            gameArray.push(new Game(playerNames))
+        } else {
+            for (let i = 0; i < +singleOrMulti; i++ ){
+                playerNames.push(`Player ${i+1}`)
+            }
+            gameArray.push(new Game(playerNames))
+        }
+        
+    }
+}
 
-let newgame = new Game(['Jacek'])
-newgame.startGame()
-newgame.setupPlayers()
-//  Loop
-newgame.Players[0].startTurn() // Or dealer if Singleplayer
-newgame.checkForWinnerOnStart()
+initialization()
+console.log(gameArray)
+console.log(gameArray[0])
 
-console.log(newgame.playersIterator.next())
+// let newgame = new Game(['Jacek'])
+// newgame.startGame()
+// newgame.setupPlayers()
+// //  Loop
+// newgame.Players[0].startTurn() // Or dealer if Singleplayer
+// newgame.checkForWinnerOnStart()
+
+// console.log(newgame.playersIterator.next())
 
