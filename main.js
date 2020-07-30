@@ -10,7 +10,9 @@ class Game {
         this.singlePlayer = true
         this.winner = ''
         // Iterator for looping through players
-        this.playersIterator = this.Players[Symbol.iterator](); 
+        this.playersIterator = this.Players[Symbol.iterator]();
+        this.checkForWinnerOnStart = this.checkForWinnerOnStart.bind(this)
+        this.endGame = this.endGame.bind(this)
     }
 
     startGame(){
@@ -40,18 +42,23 @@ class Game {
     }
 
     checkForWinnerOnStart(){
+        console.log('checkForWinnerOnStart fires')
         let playersLeft = this.Players.filter(player => player.score< 22)
+        console.log(playersLeft)
         if (playersLeft.length === 1){
+            console.log('1')
             this.winner = playersLeft[0].name
             playersLeft[0].playerWon = true
             this.endGame()
         }
         if (this.singlePlayer){
+            console.log('2')
             if (this.Players[0].playerWon){
                 this.winner = this.Players[0].name
                 this.endGame()
             }
         }else {
+            console.log('3')
             // if there are/is a winnig player in all players end game
             const winningPlayer = this.Players.filter((player)=> player.playerWon)
             if (winningPlayer.length > 0){
@@ -59,17 +66,21 @@ class Game {
                 this.endGame()
             } 
         }
+        console.log('4')
 
     }
     checkForWinnerOnGameEnd(){
         let winnerName='';
+        let tie;
         if (this.singlePlayer){
-           this.Players[0].score > this.Players[1]?this.winner = this.Players[0].name:this.winner = this.Players[1].name
+           this.Players[0].score > this.Players[1]?
+           this.winner = this.Players[0].name:
+           this.winner = this.Players[1].name
         } else {
-            let tie = false
+            tie = false
             let maxScore = 0;
             for (let i = 0; i < this.Players.length; i += 1){
-                if (this.Players[i].score > maxScore){
+                if (this.Players[i].score > maxScore && this.Players[i].score < 22){
                     maxScore = this.Players[i].score
                     winnerName = this.Players[i].name
                     tie = false
@@ -82,7 +93,8 @@ class Game {
         tie?this.winner ="It's a tie":this.winner = winnerName
     }
     endGame(){
-        // Function goes here
+        this.checkForWinnerOnGameEnd()
+        alert(`And The winner is ${this.winner}`)
     }
 }
 
@@ -100,7 +112,7 @@ class Dealer {
         console.log('dealer turn runs')
         let playerScore = document.getElementsByTagName('p')
         let scoreToHit = playerScore[3].innerHTML
-        console.log(scoreToHit)
+        gameArray[gameIndexCounter].checkForWinnerOnStart()
         while (this.score < scoreToHit){
             console.log('this runs')
             this.score += Math.round(Math.random()* 11)
@@ -110,6 +122,7 @@ class Dealer {
         if (this.score > 21){
             this.playerLost = true
         }
+        gameArray[gameIndexCounter].endGame()
     }
 
 
@@ -158,9 +171,9 @@ class Player extends Dealer{
         this.score += Math.round(Math.random()* 11)
         let playerScore = document.querySelector(`.${this.name}-score`)
         playerScore.innerHTML = this.score
-        if (this.score >= 21){
+        if (this.score > 22) {
             this.isActive = false
-            if (this.score > 21){
+            if (this.score > 22){
                 this.playerLost = true
             }
             this.endTurn()
@@ -171,14 +184,6 @@ class Player extends Dealer{
 
     passHandle(){
         this.endTurn()
-        if (gameArray[gameIndexCounter].singlePlayer){
-            let  object  = gameArray[gameIndexCounter].playersIterator.next()
-            object.value.dealerTurn()
-        } else {
-            let  object  = gameArray[gameIndexCounter].playersIterator.next()
-            object.value.startTurn()
-        }
-
     }
 
 
@@ -194,6 +199,7 @@ class Player extends Dealer{
         if (this.score == 22){
             this.playerWon = true
         }
+        gameArray[gameIndexCounter].checkForWinnerOnStart()
     }
 
     endTurn(name=this.name){
@@ -203,6 +209,15 @@ class Player extends Dealer{
 
         hitMeButton.removeEventListener('click', this.hitMeHandle)
         passButton.removeEventListener('click', this.passHandle)
+        if (gameArray[gameIndexCounter].singlePlayer){
+            let  object  = gameArray[gameIndexCounter].playersIterator.next()
+            object.value.dealerTurn()
+        } else {
+            let  object  = gameArray[gameIndexCounter].playersIterator.next()
+            console.log(object)
+            !object.done?object.value.startTurn():gameArray[gameIndexCounter].endGame()
+        }
+
     }
 
 }
@@ -237,16 +252,4 @@ if (gameArray[gameIndexCounter].singlePlayer){
     let  object  = gameArray[gameIndexCounter].playersIterator.next()
     object.value.startTurn()
 }
-
-
-
-
-// let newgame = new Game(['Jacek'])
-// newgame.startGame()
-// newgame.setupPlayers()
-// //  Loop
-// newgame.Players[0].startTurn() // Or dealer if Singleplayer
-// newgame.checkForWinnerOnStart()
-
-// console.log(newgame.playersIterator.next())
 
