@@ -116,7 +116,7 @@ class Dealer {
         let scoreToHit = playerScore[3].innerHTML
         if (scoreToHit > 21){
             alert("Dealer is the winner")
-            return /* metoda do zaczęcia nowej gry */
+            return manager.replay()
         }
         while (this.score < scoreToHit){
             console.log('this runs')
@@ -125,18 +125,19 @@ class Dealer {
             dealerScore.innerHTML = this.score
             if (this.score <= 21 && this.score > scoreToHit){
                 setTimeout(()=>alert("Dealer is the winner"), 0);
-                return /* metoda do zaczęcia nowej gry */
+                return manager.replay()
             }else if(scoreToHit === 21 && this.score === 21){
                 setTimeout(()=>alert("Its a tie"), 0);
-                return /* metoda do zaczęcia nowej gry */
+                return manager.replay()
             }else if(this.score > 21){
                 setTimeout(()=>alert("You are the winner"), 0);
-                return /* metoda do zaczęcia nowej gry */
+                return manager.replay()
+            }else if(scoreToHit === this.score){
+                setTimeout(()=>alert("Its a tie"), 0);
+                return manager.replay()
             }
         }
     }
-
-
     createPlayer(name= this.name) {
         let playerName = document.createElement('div')
         playerName.innerHTML =`${name}`
@@ -260,6 +261,8 @@ class Manager{
 
     }
     replay(){
+        dealerNode.innerHTML =''
+        playersNode.innerHTML =''
         let decision = prompt("Do you want to play a new game?",'yes')
         if (decision || ''){
             manager.initialization()
