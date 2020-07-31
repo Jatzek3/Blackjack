@@ -8,7 +8,8 @@ class Game {
         this.playerNames = playerNames
         this.Players = []
         this.singlePlayer = true
-        this.winner = 'Dealer'
+        this.tie = false
+        this.winner = ''
         // Iterator for looping through players
         this.playersIterator = this.Players[Symbol.iterator]();
         this.checkForWinnerOnStart = this.checkForWinnerOnStart.bind(this)
@@ -42,7 +43,6 @@ class Game {
     }
 
     checkForWinnerOnStart(){
-        console.log('checkForWinnerOnStart fires')
         let playersLeft = this.Players.filter(player => player.score< 22)
         console.log(playersLeft)
         if (playersLeft.length === 1){
@@ -70,27 +70,27 @@ class Game {
 
     }
     checkForWinnerOnGameEnd(){
+        let playersLeft = this.Players.filter(player => player.score< 22)
+        console.log(playersLeft)
         let winnerName='';
-        let tie;
         if (this.singlePlayer){
            this.Players[0].score > this.Players[1]?
            this.winner = this.Players[0].name:
            this.winner = this.Players[1].name
         } else {
-            tie = false
             let maxScore = 0;
             for (let i = 0; i < this.Players.length; i += 1){
                 if (this.Players[i].score > maxScore && this.Players[i].score < 22){
                     maxScore = this.Players[i].score
                     winnerName = this.Players[i].name
-                    tie = false
+                    this.tie = false
                 }
                 else if (this.Players[i].score === maxScore){
-                    tie = true
+                    this.tie = true
                 }
             }
         }
-        tie?this.winner ="It's a tie":this.winner = winnerName
+        this.tie?this.winner ="It's a tie":this.winner = winnerName
     }
     endGame(){
         console.log(this.winnerName)
@@ -181,13 +181,9 @@ class Player extends Dealer{
         this.score += Math.round(Math.random()* 11)
         let playerScore = document.querySelector(`.${this.name}-score`)
         playerScore.innerHTML = this.score
-        if (this.score > 22) {
+        if (this.score > 21) {
             this.isActive = false
-            if (this.score > 22){
-                this.playerLost = true
-            }
             this.endTurn()
-            gameArray[gameIndexCounter].playersIterator.next()
 
         }
     }
@@ -223,8 +219,8 @@ class Player extends Dealer{
             let  object  = gameArray[gameIndexCounter].playersIterator.next()
             object.value.artificialInteligence()
         } else {
-            let  object  = gameArray[gameIndexCounter].playersIterator.next()
-            console.log(object)
+            let  object = gameArray[gameIndexCounter].playersIterator.next()
+            console.log('next player',object)
             !object.done?object.value.startTurn():gameArray[gameIndexCounter].endGame()
         }
 
