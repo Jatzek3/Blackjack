@@ -94,7 +94,40 @@ class Game {
     }
 }
 
+
+class Deck {
+    constructor(){
+        this.values = {'2' : 2, '3': 3, '4': 4, '5': 5,
+         '6': 6, '7': 7, '8': 8, '9': 9, '0':10,
+         'ACE':11,'KING':4,'QUEEN':3,'JACK':2 }
+         this.deckId = ''
+         this.getNewDeck = this.getNewDeck.bind(this)
+         this.draw = this.draw.bind(this)
+    }
+
+    getNewDeck(){
+        fetch("https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=6")
+        .then((response) => response.json())
+        .then((data) => {
+            this.deckId = data.deck_id;
+            console.log(this.deckId)
+        });
+    }
     
+    draw(){
+        fetch(`https://deckofcardsapi.com/api/deck/${this.deckId}/draw/?count=1`)
+        .then((response) => response.json())
+        .then((data) => (console.log(data)))
+    }
+
+    shuffle(){
+        fetch(`https://deckofcardsapi.com/api/deck/${this.deckId}/shuffle/`)
+        .fetch((response) => response.json())
+        .then((data) => {console.log(data)})
+    }
+}
+    
+
 class Dealer {
     constructor(name){
     this.name = name
@@ -174,7 +207,6 @@ class Player extends Dealer {
 
 
     hitMeHandle() {
-        console.log('hitmehandle')
         this.score += Math.round(Math.random()* 11)
         let playerScore = document.querySelector(`.${this.name}-score`)
         playerScore.innerHTML = this.score
@@ -215,7 +247,6 @@ class Player extends Dealer {
             object.value.artificialInteligence()
         } else {
             let  object = gameArray[gameIndexCounter].playersIterator.next()
-            console.log('next player',object)
             !object.done?object.value.startTurn():gameArray[gameIndexCounter].endGame()
         }
     }
@@ -263,11 +294,14 @@ class Manager{
 }
 
 
-let gameArray = []
-let gameIndexCounter = -1
-let manager = new Manager()
-manager.initialization()
-manager.newGame()
+// let gameArray = []
+// let gameIndexCounter = -1
+// let manager = new Manager()
+// manager.initialization()
+// manager.newGame()
+
+let newDeck = new Deck()
+newDeck.getNewDeck()
 
 
 
