@@ -227,35 +227,45 @@ class Player extends Dealer{
     }
 
 }
+class Manager{
 
-let gameArray = []
-let gameIndexCounter = -1
-const initialization = () => {
-    let agreement = prompt('Do you want to play a game?','Yes')
-    if (agreement){
-        let playerNames = []
-        gameIndexCounter += 1
-        let hero = prompt('What is Your Name', 'Hero')
-        playerNames.push(hero)
-        let singleOrMulti = prompt('If You want to play aginst the dealer enter yes. If you want to play with friends enter a number of other player', 'yes')
-        if (singleOrMulti.toLowerCase == 'yes'){
-            gameArray.push(new Game(playerNames))
-        } else {
-            for (let i = 0; i < +singleOrMulti; i++ ){
-                playerNames.push(`Player${i+1}`)
+    initialization() {
+        let agreement = prompt('Do you want to play a game?','Yes')
+        if (agreement){
+            let playerNames = []
+            gameIndexCounter += 1
+            let hero = prompt('What is Your Name', 'Hero')
+            playerNames.push(hero)
+            let singleOrMulti = prompt('If You want to play aginst the dealer enter yes. If you want to play with friends enter a number of other player', 'yes')
+            if (singleOrMulti.toLowerCase == 'yes'){
+                gameArray.push(new Game(playerNames))
+            } else {
+                for (let i = 0; i < +singleOrMulti; i++ ){
+                    playerNames.push(`Player${i+1}`)
+                }
+                gameArray.push(new Game(playerNames))
             }
-            gameArray.push(new Game(playerNames))
+            
+        }
+    }
+    newGame(){
+        gameArray[gameIndexCounter].startGame()
+        gameArray[gameIndexCounter].setupPlayers()
+        if (gameArray[gameIndexCounter].singlePlayer){
+            gameArray[gameIndexCounter].Players[1].startTurn()
+        } else {
+            let  object  = gameArray[gameIndexCounter].playersIterator.next()
+            object.value.startTurn()
         }
         
+
     }
 }
-initialization()
-gameArray[gameIndexCounter].startGame()
-gameArray[gameIndexCounter].setupPlayers()
-if (gameArray[gameIndexCounter].singlePlayer){
-    gameArray[gameIndexCounter].Players[1].startTurn()
-} else {
-    let  object  = gameArray[gameIndexCounter].playersIterator.next()
-    object.value.startTurn()
-}
+let gameArray = []
+let gameIndexCounter = -1
+let manager = new Manager()
+manager.initialization()
+manager.newGame()
+
+
 
