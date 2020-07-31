@@ -96,6 +96,7 @@ class Game {
         console.log(this.winnerName)
         this.checkForWinnerOnGameEnd()
         alert(`And The winner is ${this.winner}`)
+        manager.replay()
     }
 }
 
@@ -230,8 +231,6 @@ class Player extends Dealer{
 class Manager{
 
     initialization() {
-        let agreement = prompt('Do you want to play a game?','Yes')
-        if (agreement){
             let playerNames = []
             gameIndexCounter += 1
             let hero = prompt('What is Your Name', 'Hero')
@@ -246,7 +245,7 @@ class Manager{
                 gameArray.push(new Game(playerNames))
             }
             
-        }
+        
     }
     newGame(){
         gameArray[gameIndexCounter].startGame()
@@ -260,7 +259,17 @@ class Manager{
         
 
     }
+    replay(){
+        let decision = prompt("Do you want to play a new game?",'yes')
+        if (decision || ''){
+            manager.initialization()
+            return manager.newGame()
+        }
+        alert("Goodbye")
+    }
 }
+
+
 let gameArray = []
 let gameIndexCounter = -1
 let manager = new Manager()
