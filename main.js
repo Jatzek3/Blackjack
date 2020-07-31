@@ -8,7 +8,7 @@ class Game {
         this.playerNames = playerNames
         this.Players = []
         this.singlePlayer = true
-        this.winner = ''
+        this.winner = 'Dealer'
         // Iterator for looping through players
         this.playersIterator = this.Players[Symbol.iterator]();
         this.checkForWinnerOnStart = this.checkForWinnerOnStart.bind(this)
@@ -50,8 +50,9 @@ class Game {
             this.winner = playersLeft[0].name
             playersLeft[0].playerWon = true
             this.endGame()
+
         }
-        if (this.singlePlayer){
+        else if (this.singlePlayer){
             console.log('2')
             if (this.Players[0].playerWon){
                 this.winner = this.Players[0].name
@@ -66,7 +67,6 @@ class Game {
                 this.endGame()
             } 
         }
-        console.log('4')
 
     }
     checkForWinnerOnGameEnd(){
@@ -93,6 +93,7 @@ class Game {
         tie?this.winner ="It's a tie":this.winner = winnerName
     }
     endGame(){
+        console.log(this.winnerName)
         this.checkForWinnerOnGameEnd()
         alert(`And The winner is ${this.winner}`)
     }
@@ -108,21 +109,30 @@ class Dealer {
     this.playerWon = false
     }
     
-    dealerTurn (){
+    artificialInteligence (){
         console.log('dealer turn runs')
         let playerScore = document.getElementsByTagName('p')
         let scoreToHit = playerScore[3].innerHTML
-        gameArray[gameIndexCounter].checkForWinnerOnStart()
+        if (scoreToHit > 21){
+            alert("Dealer is the winner")
+            return /* metoda do zaczęcia nowej gry */
+        }
         while (this.score < scoreToHit){
             console.log('this runs')
             this.score += Math.round(Math.random()* 11)
             let dealerScore = document.querySelector('.Dealer-score')
             dealerScore.innerHTML = this.score
+            if (this.score <= 21 && this.score > scoreToHit){
+                setTimeout(()=>alert("Dealer is the winner"), 0);
+                return /* metoda do zaczęcia nowej gry */
+            }else if(scoreToHit === 21 && this.score === 21){
+                setTimeout(()=>alert("Its a tie"), 0);
+                return /* metoda do zaczęcia nowej gry */
+            }else if(this.score > 21){
+                setTimeout(()=>alert("You are the winner"), 0);
+                return /* metoda do zaczęcia nowej gry */
+            }
         }
-        if (this.score > 21){
-            this.playerLost = true
-        }
-        gameArray[gameIndexCounter].endGame()
     }
 
 
@@ -211,7 +221,7 @@ class Player extends Dealer{
         passButton.removeEventListener('click', this.passHandle)
         if (gameArray[gameIndexCounter].singlePlayer){
             let  object  = gameArray[gameIndexCounter].playersIterator.next()
-            object.value.dealerTurn()
+            object.value.artificialInteligence()
         } else {
             let  object  = gameArray[gameIndexCounter].playersIterator.next()
             console.log(object)
