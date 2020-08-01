@@ -251,7 +251,7 @@ class Player extends Dealer {
             if (this.score == 22){
                 this.playerWon = true
             }
-        gameArray[gameIndexCounter].checkForWinnerOnStart()
+        manager.gameArray[manager.gameIndexCounter].checkForWinnerOnStart()
         turnStarted.then(()=> {playerScore.innerHTML = this.score})
     }
 
@@ -261,41 +261,45 @@ class Player extends Dealer {
         let passButton = document.querySelector(`.${name}-fold-button`)
         hitMeButton.removeEventListener('click', this.hitMeHandle)
         passButton.removeEventListener('click', this.passHandle)
-        if (gameArray[gameIndexCounter].singlePlayer){
-            let  object  = gameArray[gameIndexCounter].playersIterator.next()
+        if (manager.gameArray[manager.gameIndexCounter].singlePlayer){
+            let  object  = manager.gameArray[manager.gameIndexCounter].playersIterator.next()
             object.value.artificialInteligence()
         } else {
-            let  object = gameArray[gameIndexCounter].playersIterator.next()
-            !object.done?object.value.startTurn():gameArray[gameIndexCounter].endGame()
+            let  object = manager.gameArray[manager.gameIndexCounter].playersIterator.next()
+            !object.done?object.value.startTurn():manager.gameArray[manager.gameIndexCounter].endGame()
         }
     }
 }
 
 class Manager{
+    constructor(){
+        this.gameArray = []
+        this.gameIndexCounter = -1
+    }
 
     initialization() {
             let playerNames = []
-            gameIndexCounter += 1
+            this.gameIndexCounter += 1
             let hero = prompt('What is Your Name', 'Hero')
             playerNames.push(hero)
             let singleOrMulti = prompt('Do you want to play alone, or with others(enter number)', 'yes')
             if (singleOrMulti.toLowerCase == 'yes'){
-                gameArray.push(new Game(playerNames))
+                this.gameArray.push(new Game(playerNames))
             } else {
                 for (let i = 0; i < +singleOrMulti; i++ ){
                     playerNames.push(`Player${i+1}`)
                 }
-                gameArray.push(new Game(playerNames))
+                this.gameArray.push(new Game(playerNames))
             }
         }
 
     newGame() {
-        gameArray[gameIndexCounter].startGame()
-        gameArray[gameIndexCounter].setupPlayers()
-        if (gameArray[gameIndexCounter].singlePlayer){
-            gameArray[gameIndexCounter].Players[1].startTurn()
+        this.gameArray[this.gameIndexCounter].startGame()
+        this.gameArray[this.gameIndexCounter].setupPlayers()
+        if (this.gameArray[this.gameIndexCounter].singlePlayer){
+            this.gameArray[this.gameIndexCounter].Players[1].startTurn()
         } else {
-            let  object  = gameArray[gameIndexCounter].playersIterator.next()
+            let  object  = this.gameArray[this.gameIndexCounter].playersIterator.next()
             object.value.startTurn()
         }
     }
@@ -313,23 +317,16 @@ class Manager{
 }
 
 
-let gameArray = []
-let gameIndexCounter = -1
 let manager = new Manager()
 let newDeck = new Deck()
 
-//  get the deck and the procced shuffling 
 const deckReady = newDeck.getNewDeck()
 .then(()=> {newDeck.shuffle()})
 .then(()=> {manager.initialization()})
 .then(()=> {manager.newGame()})
 
 
-// console.log(newDeck.getNewDeck)
 
-
-// manager.initialization()
-// manager.newGame()
 
 
 
