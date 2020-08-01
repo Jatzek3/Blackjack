@@ -54,8 +54,7 @@ class Game {
         } else if (this.singlePlayer){
             if (this.Players[0].playerWon){
                 this.winner = this.Players[0].name
-                this.endGame()
-            }
+                this.endGame()}
          } else {
             const winningPlayer = this.Players.filter((player)=> player.playerWon)
             if (winningPlayer.length > 0){
@@ -65,10 +64,13 @@ class Game {
         }
 
     }
+        
 
-    checkForWinnerOnGameEnd() {
+    checkForWinnerOnGameEnd() {     //  Serious Debug needed
+
         let playersLeft = this.Players.filter(player => player.score< 22)
         let winnerName='';
+        //  Compare this with AI
         if (this.singlePlayer){
            this.Players[0].score > this.Players[1]?
            this.winner = this.Players[0].name:
@@ -76,14 +78,15 @@ class Game {
 
         } else {
             let maxScore = 0;
+            if (playersLeft.length)
             for (let i = 0; i < this.Players.length; i += 1){
-                if (this.Players[i].score > maxScore && this.Players[i].score < 22){
+                if (this.Players[i].score === maxScore){
+                    this.tie = true
+                } else if (this.Players[i].score > maxScore 
+                    && this.Players[i].score < 22) {
                     maxScore = this.Players[i].score
                     winnerName = this.Players[i].name
                     this.tie = false
-                }
-                else if (this.Players[i].score === maxScore){
-                    this.tie = true
                 }
             }
         }
@@ -139,6 +142,8 @@ class Dealer {
     }
     
     artificialInteligence () {
+        // The last card In AI must be visible, as well as players over 22
+        // Add dom maniplation to display cards
         let playerScore = document.getElementsByTagName('p')
         this.scoreToHit = playerScore[3].innerHTML
         if (this.scoreToHit > 21){
@@ -226,6 +231,8 @@ class Player extends Dealer {
 
 
     hitMeHandle() {
+        // The last card In AI must be visible, as well as players over 22
+        // Add dom maniplation to display cards
         let playerScore = document.querySelector(`.${this.name}-score`)
 
         fetch(`https://deckofcardsapi.com/api/deck/${newDeck.deckId}/draw/?count=1`)
