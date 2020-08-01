@@ -134,34 +134,49 @@ class Dealer {
     this.score = 0
     this.playerLost = false
     this.playerWon = false
+    this.scoreToHit = 0
     }
     
     artificialInteligence () {
         let playerScore = document.getElementsByTagName('p')
-        let scoreToHit = playerScore[3].innerHTML
-        if (scoreToHit > 21){
+        this.scoreToHit = playerScore[3].innerHTML
+        if (this.scoreToHit > 21){
             alert("Dealer is the winner")
             return manager.replay()
         }
-        
-        while (this.score < scoreToHit) {
-            let dealerScore = document.querySelector('.Dealer-score')
-            // Masssive problems with AI--- Draw a card -> update dealer score -> run the checking
-            // Separate function for if else!
-            dealerScore.innerHTML = this.score
-            if (this.score <= 21 && this.score > scoreToHit){
-                alert("Dealer is the winner")
-                return manager.replay()
-            } else if(scoreToHit === 21 && this.score === 21){
-                alert("Its a tie")
-                return manager.replay()
-            } else if(this.score > 21){
-                alert("You are the winner")
-                return manager.replay()
-            } else if(scoreToHit === this.score){
-                alert("Its a tie")
-                return manager.replay()
-            }
+        this.dealerDraws()
+        }
+
+
+    dealerDraws(){
+        let dealerScore = document.querySelector('.Dealer-score')
+        if (this.score < this.scoreToHit){
+        fetch(`https://deckofcardsapi.com/api/deck/${newDeck.deckId}/draw/?count=1`)
+        .then((response) => response.json())
+        .then((data) => {
+            const cardValue = data.cards[0].value
+            const scoreValue = newDeck.values[cardValue]
+            this.score += scoreValue})
+        .then(()=> {dealerScore.innerHTML = this.score})
+        .then(()=>{this.chechIfDealerWon()})
+        .then(()=>{this.dealerDraws()})
+        }
+    }
+
+
+    chechIfDealerWon(){
+        if (this.score <= 21 && this.score > this.scoreToHit){
+            alert("Dealer is the winner")
+            return manager.replay()
+        } else if(this.scoreToHit === 21 && this.score === 21){
+            alert("Its a tie")
+            return manager.replay()
+        } else if(this.score > 21){
+            alert("You are the winner")
+            return manager.replay()
+        } else if(this.scoreToHit === this.score){
+            alert("Its a tie")
+            return manager.replay()
         }
     }
 
