@@ -1,7 +1,8 @@
 let dealerNode = document.querySelector('.dealer-button')
 let playersNode = document.querySelector('.players')
-
-
+let shuffleReady;
+let turnStarted;
+let cardDrawn;
 
 
 
@@ -18,8 +19,8 @@ class Game {
     }
 
     startGame() {
-        // Problem with shuffling on the start!! - should be shullfed after the deck is fetched 222
-        newDeck.shuffle()
+        shuffleReady = deckReady.then(()=>{newDeck.shuffle()})
+        console.log(shuffleReady)
         if (this.playerNames.length === 1){
             const dealer = new Dealer('Dealer')
             this.Players.push(dealer)
@@ -255,8 +256,9 @@ class Player extends Dealer {
         hitMeButton.addEventListener('click',this.hitMeHandle)
         passButton.addEventListener('click',this.passHandle )
         // Deal with drawin on the start``
-        this.hitMeHandle()
-        this.hitMeHandle()
+        turnStarted = shuffleReady
+        .then(()=>{this.hitMeHandle()})
+        .then(()=>{this.hitMeHandle()})
             if (this.score == 22){
                 this.playerWon = true
             }
@@ -326,9 +328,7 @@ let gameIndexCounter = -1
 let manager = new Manager()
 let newDeck = new Deck()
 
-
-
-//  get the deck and the procced shuffling 1111
+//  get the deck and the procced shuffling 
 const deckReady = newDeck.getNewDeck()
 .then(()=> {newDeck.shuffle()})
 .then(()=> {manager.initialization()})
@@ -336,9 +336,6 @@ const deckReady = newDeck.getNewDeck()
 
 
 // console.log(newDeck.getNewDeck)
-
-
-
 
 
 // manager.initialization()
