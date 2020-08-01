@@ -135,6 +135,7 @@ class Dealer {
     this.playerLost = false
     this.playerWon = false
     this.scoreToHit = 0
+    this.chechIfDealerWon = this.chechIfDealerWon.bind(this)
     }
     
     artificialInteligence () {
@@ -165,16 +166,19 @@ class Dealer {
 
 
     chechIfDealerWon(){
+        console.log('this runs')
         if (this.score <= 21 && this.score > this.scoreToHit){
+            console.log('scenario1 runs')
             alert("Dealer is the winner")
             return manager.replay()
         } else if(this.scoreToHit === 21 && this.score === 21){
+            console.log('scenario2 runs')
             alert("Its a tie")
             return manager.replay()
-        } else if(this.score > 21){
+        } else if(this.score > 21) {
             alert("You are the winner")
-            return manager.replay()
-        } else if(this.scoreToHit === this.score){
+            return manager.replay() 
+        } else if (this.scoreToHit === this.score){
             alert("Its a tie")
             return manager.replay()
         }
