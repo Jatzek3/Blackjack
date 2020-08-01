@@ -47,7 +47,6 @@ class Game {
 
     checkForWinnerOnStart() {
         let playersLeft = this.Players.filter(player => player.score< 22)
-        console.log(playersLeft)
         if (playersLeft.length === 1){
             this.winner = playersLeft[0].name
             playersLeft[0].playerWon = true
@@ -114,14 +113,15 @@ class Deck {
          this.shuffle =this.shuffle.bind(this)
     }
 
-    getNewDeck(){
+    getNewDeck = () => new Promise((resolve, reject) =>{
         fetch("https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=6")
         .then((response) => response.json())
         .then((data) => {
             this.deckId = data.deck_id;
-            console.log(this.deckId)
+            console.log('New deck festched',this.deckId)
+            resolve()
         });
-    }
+    } ) 
     
     draw(){
         fetch(`https://deckofcardsapi.com/api/deck/${this.deckId}/draw/?count=1`)
@@ -144,7 +144,7 @@ class Deck {
     shuffle(){
         fetch(`https://deckofcardsapi.com/api/deck/${this.deckId}/shuffle/`)
         .then((response) => response.json())
-        .then((data) => {console.log(data)})
+        .then((data) => {console.log('New deck shuffled',data)})
     }
 }
     
@@ -200,6 +200,7 @@ class Dealer {
         score.className = `${name}-score`
         playerName.appendChild(cards)
         playerName.appendChild(score)
+
             if (this instanceof Player) {
             let hitButton = document.createElement("BUTTON")
             hitButton.innerHTML = 'Hit Me!'
@@ -253,12 +254,12 @@ class Player extends Dealer {
 
         hitMeButton.addEventListener('click',this.hitMeHandle)
         passButton.addEventListener('click',this.passHandle )
-        // Deal with drawin on the start
+        // Deal with drawin on the start``
         this.hitMeHandle()
         this.hitMeHandle()
-        if (this.score == 22){
-            this.playerWon = true
-        }
+            if (this.score == 22){
+                this.playerWon = true
+            }
         gameArray[gameIndexCounter].checkForWinnerOnStart()
     }
 
@@ -285,7 +286,7 @@ class Manager{
             gameIndexCounter += 1
             let hero = prompt('What is Your Name', 'Hero')
             playerNames.push(hero)
-            let singleOrMulti = prompt('If You want to play aginst the dealer enter yes. If you want to play with friends enter a number of other player', 'yes')
+            let singleOrMulti = prompt('Do you want to play alone, or with others(enter number)', 'yes')
             if (singleOrMulti.toLowerCase == 'yes'){
                 gameArray.push(new Game(playerNames))
             } else {
@@ -320,17 +321,28 @@ class Manager{
 }
 
 
-let newDeck = new Deck()
-//  get the deck and the procced shuffling 1111
-newDeck.getNewDeck()
-
-
 let gameArray = []
 let gameIndexCounter = -1
 let manager = new Manager()
+let newDeck = new Deck()
 
-manager.initialization()
-manager.newGame()
+
+
+//  get the deck and the procced shuffling 1111
+const deckReady = newDeck.getNewDeck()
+.then(()=> {newDeck.shuffle()})
+.then(()=> {manager.initialization()})
+.then(()=> {manager.newGame()})
+
+
+// console.log(newDeck.getNewDeck)
+
+
+
+
+
+// manager.initialization()
+// manager.newGame()
 
 
 
