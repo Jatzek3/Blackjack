@@ -18,7 +18,8 @@ class Game {
     }
 
     startGame() {
-        setTimeout(newDeck.shuffle,0)
+        // Problem with shuffling on the start!! - should be shullfed after the deck is fetched 222
+        newDeck.shuffle()
         if (this.playerNames.length === 1){
             const dealer = new Dealer('Dealer')
             this.Players.push(dealer)
@@ -37,6 +38,7 @@ class Game {
         if (this.singlePlayer){
             dealerNode.appendChild(this.Players[0].createPlayer())
             playersNode.appendChild(this.Players[1].createPlayer())
+
         } else {
         this.Players.map((player)=>
         playersNode.appendChild(player.createPlayer()))
@@ -74,6 +76,7 @@ class Game {
            this.Players[0].score > this.Players[1]?
            this.winner = this.Players[0].name:
            this.winner = this.Players[1].name
+
         } else {
             let maxScore = 0;
             for (let i = 0; i < this.Players.length; i += 1){
@@ -93,6 +96,7 @@ class Game {
     endGame(){
         console.log(this.winnerName)
         this.checkForWinnerOnGameEnd()
+        // All the messages should wait for the cards to resolve
         alert(`And The winner is ${this.winner}`)
         manager.replay()
     }
@@ -127,6 +131,7 @@ class Deck {
             const scoreValue = this.values[cardValue]
             console.log('this had been drawn', cardValue)
             console.log('this is score', scoreValue)
+            // This should be written in another function in the player class
             for (const person of gameArray[gameIndexCounter].Players){
                 if (person.isActive){
                     console.log(person)
@@ -162,21 +167,22 @@ class Dealer {
             return manager.replay()
         }
         while (this.score < scoreToHit) {
-            console.log('this runs')
-            this.score += Math.round(Math.random()* 11)
+            // Masssive problems with AI--- Draw a card -> update dealer score -> run the checking
+            // Separate function for if else!
+            newDeck.draw()
             let dealerScore = document.querySelector('.Dealer-score')
             dealerScore.innerHTML = this.score
             if (this.score <= 21 && this.score > scoreToHit){
-                setTimeout(()=>alert("Dealer is the winner"), 0);
+                alert("Dealer is the winner")
                 return manager.replay()
             } else if(scoreToHit === 21 && this.score === 21){
-                setTimeout(()=>alert("Its a tie"), 0);
+                alert("Its a tie")
                 return manager.replay()
             } else if(this.score > 21){
-                setTimeout(()=>alert("You are the winner"), 0);
+                alert("You are the winner")
                 return manager.replay()
             } else if(scoreToHit === this.score){
-                setTimeout(()=>alert("Its a tie"), 0);
+                alert("Its a tie")
                 return manager.replay()
             }
         }
@@ -223,9 +229,11 @@ class Player extends Dealer {
 
 
     hitMeHandle() {
-        setTimeout(newDeck.draw, 500)
+        // Draw a card after the deck have been fetched and shuffled 333
+        newDeck.draw()
         console.log('this is the new score', this.score)
         let playerScore = document.querySelector(`.${this.name}-score`)
+        // Update the score when the card is drawn -444
         playerScore.innerHTML = this.score
         if (this.score > 21) {
             this.isActive = false
@@ -245,6 +253,7 @@ class Player extends Dealer {
 
         hitMeButton.addEventListener('click',this.hitMeHandle)
         passButton.addEventListener('click',this.passHandle )
+        // Deal with drawin on the start
         this.hitMeHandle()
         this.hitMeHandle()
         if (this.score == 22){
@@ -312,6 +321,7 @@ class Manager{
 
 
 let newDeck = new Deck()
+//  get the deck and the procced shuffling 1111
 newDeck.getNewDeck()
 
 
@@ -320,7 +330,7 @@ let gameIndexCounter = -1
 let manager = new Manager()
 
 manager.initialization()
-setTimeout(manager.newGame,300)
+manager.newGame()
 
 
 
