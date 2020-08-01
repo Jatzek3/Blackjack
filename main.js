@@ -110,7 +110,6 @@ class Deck {
          'ACE':11,'KING':4,'QUEEN':3,'JACK':2 }
          this.deckId = ''
          this.getNewDeck = this.getNewDeck.bind(this)
-         this.draw = this.draw.bind(this)
          this.shuffle =this.shuffle.bind(this)
     }
 
@@ -124,23 +123,6 @@ class Deck {
         });
     } ) 
     
-    draw(){
-        fetch(`https://deckofcardsapi.com/api/deck/${this.deckId}/draw/?count=1`)
-        .then((response) => response.json())
-        .then((data) => {
-            const cardValue = data.cards[0].value
-            const scoreValue = this.values[cardValue]
-            console.log('this had been drawn', cardValue)
-            console.log('this is score', scoreValue)
-            // This should be written in another function in the player class
-            for (const person of gameArray[gameIndexCounter].Players){
-                if (person.isActive){
-                    console.log(person)
-                    person.score += scoreValue
-                }
-            }        
-        })
-    }
 
     shuffle(){
         fetch(`https://deckofcardsapi.com/api/deck/${this.deckId}/shuffle/`)
@@ -231,17 +213,23 @@ class Player extends Dealer {
 
 
     hitMeHandle() {
-        // Draw a card after the deck have been fetched and shuffled 333
-        newDeck.draw()
-        console.log('this is the new score', this.score)
         let playerScore = document.querySelector(`.${this.name}-score`)
-        // Update the score when the card is drawn -444
-        playerScore.innerHTML = this.score
-        if (this.score > 21) {
+
+        fetch(`https://deckofcardsapi.com/api/deck/${newDeck.deckId}/draw/?count=1`)
+        .then((response) => response.json())
+        .then((data) => {
+            const cardValue = data.cards[0].value
+            const scoreValue = newDeck.values[cardValue]
+            this.score += scoreValue})
+        .then(()=> {playerScore.innerHTML = this.score})
+        .then(()=>{        
+            if (this.score > 21) {
             this.isActive = false
             this.endTurn()
-        }
+        }})
+
     }
+
 
     passHandle(){
         this.endTurn()
@@ -249,20 +237,22 @@ class Player extends Dealer {
 
 
     startTurn(name = this.name) {
-        this.isActive =true 
+        this.isActive = true 
+        let playerScore = document.querySelector(`.${this.name}-score`)
         let hitMeButton = document.querySelector(`.${name}-hit-button`)
         let passButton = document.querySelector(`.${name}-fold-button`)
 
         hitMeButton.addEventListener('click',this.hitMeHandle)
         passButton.addEventListener('click',this.passHandle )
-        // Deal with drawin on the start``
         turnStarted = shuffleReady
         .then(()=>{this.hitMeHandle()})
         .then(()=>{this.hitMeHandle()})
+        
             if (this.score == 22){
                 this.playerWon = true
             }
         gameArray[gameIndexCounter].checkForWinnerOnStart()
+        turnStarted.then(()=> {playerScore.innerHTML = this.score})
     }
 
     endTurn(name=this.name) {
