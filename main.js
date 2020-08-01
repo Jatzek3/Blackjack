@@ -2,6 +2,9 @@ let dealerNode = document.querySelector('.dealer-button')
 let playersNode = document.querySelector('.players')
 
 
+
+
+
 class Game {
     constructor(playerNames) {
         this.playerNames = playerNames
@@ -15,6 +18,7 @@ class Game {
     }
 
     startGame() {
+        setTimeout(newDeck.shuffle,0)
         if (this.playerNames.length === 1){
             const dealer = new Dealer('Dealer')
             this.Players.push(dealer)
@@ -98,11 +102,12 @@ class Game {
 class Deck {
     constructor(){
         this.values = {'2' : 2, '3': 3, '4': 4, '5': 5,
-         '6': 6, '7': 7, '8': 8, '9': 9, '0':10,
+         '6': 6, '7': 7, '8': 8, '9': 9, '10':10,
          'ACE':11,'KING':4,'QUEEN':3,'JACK':2 }
          this.deckId = ''
          this.getNewDeck = this.getNewDeck.bind(this)
          this.draw = this.draw.bind(this)
+         this.shuffle =this.shuffle.bind(this)
     }
 
     getNewDeck(){
@@ -117,12 +122,23 @@ class Deck {
     draw(){
         fetch(`https://deckofcardsapi.com/api/deck/${this.deckId}/draw/?count=1`)
         .then((response) => response.json())
-        .then((data) => (console.log(data)))
+        .then((data) => {
+            const cardValue = data.cards[0].value
+            const scoreValue = this.values[cardValue]
+            console.log('this had been drawn', cardValue)
+            console.log('this is score', scoreValue)
+            for (const person of gameArray[gameIndexCounter].Players){
+                if (person.isActive){
+                    console.log(person)
+                    person.score += scoreValue
+                }
+            }        
+        })
     }
 
     shuffle(){
         fetch(`https://deckofcardsapi.com/api/deck/${this.deckId}/shuffle/`)
-        .fetch((response) => response.json())
+        .then((response) => response.json())
         .then((data) => {console.log(data)})
     }
 }
@@ -207,7 +223,8 @@ class Player extends Dealer {
 
 
     hitMeHandle() {
-        this.score += Math.round(Math.random()* 11)
+        setTimeout(newDeck.draw, 500)
+        console.log('this is the new score', this.score)
         let playerScore = document.querySelector(`.${this.name}-score`)
         playerScore.innerHTML = this.score
         if (this.score > 21) {
@@ -294,14 +311,18 @@ class Manager{
 }
 
 
-// let gameArray = []
-// let gameIndexCounter = -1
-// let manager = new Manager()
-// manager.initialization()
-// manager.newGame()
-
 let newDeck = new Deck()
 newDeck.getNewDeck()
+
+
+let gameArray = []
+let gameIndexCounter = -1
+let manager = new Manager()
+
+manager.initialization()
+setTimeout(manager.newGame,300)
+
+
 
 
 
