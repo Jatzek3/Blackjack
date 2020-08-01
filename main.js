@@ -2,7 +2,6 @@ let dealerNode = document.querySelector('.dealer-button')
 let playersNode = document.querySelector('.players')
 let shuffleReady;
 let turnStarted;
-let cardDrawn;
 
 
 
@@ -20,7 +19,6 @@ class Game {
 
     startGame() {
         shuffleReady = deckReady.then(()=>{newDeck.shuffle()})
-        console.log(shuffleReady)
         if (this.playerNames.length === 1){
             const dealer = new Dealer('Dealer')
             this.Players.push(dealer)
@@ -70,7 +68,6 @@ class Game {
 
     checkForWinnerOnGameEnd() {
         let playersLeft = this.Players.filter(player => player.score< 22)
-        console.log(playersLeft)
         let winnerName='';
         if (this.singlePlayer){
            this.Players[0].score > this.Players[1]?
@@ -96,7 +93,6 @@ class Game {
     endGame(){
         console.log(this.winnerName)
         this.checkForWinnerOnGameEnd()
-        // All the messages should wait for the cards to resolve
         alert(`And The winner is ${this.winner}`)
         manager.replay()
     }
@@ -123,7 +119,6 @@ class Deck {
         });
     } ) 
     
-
     shuffle(){
         fetch(`https://deckofcardsapi.com/api/deck/${this.deckId}/shuffle/`)
         .then((response) => response.json())
@@ -142,18 +137,17 @@ class Dealer {
     }
     
     artificialInteligence () {
-        console.log('dealer turn runs')
         let playerScore = document.getElementsByTagName('p')
         let scoreToHit = playerScore[3].innerHTML
         if (scoreToHit > 21){
             alert("Dealer is the winner")
             return manager.replay()
         }
+        
         while (this.score < scoreToHit) {
+            let dealerScore = document.querySelector('.Dealer-score')
             // Masssive problems with AI--- Draw a card -> update dealer score -> run the checking
             // Separate function for if else!
-            newDeck.draw()
-            let dealerScore = document.querySelector('.Dealer-score')
             dealerScore.innerHTML = this.score
             if (this.score <= 21 && this.score > scoreToHit){
                 alert("Dealer is the winner")
@@ -230,37 +224,38 @@ class Player extends Dealer {
 
     }
 
-
     passHandle(){
         this.endTurn()
     }
 
-
     startTurn(name = this.name) {
         this.isActive = true 
-        let playerScore = document.querySelector(`.${this.name}-score`)
+
+        let playerScore = document.querySelector(`.${name}-score`)
         let hitMeButton = document.querySelector(`.${name}-hit-button`)
         let passButton = document.querySelector(`.${name}-fold-button`)
 
         hitMeButton.addEventListener('click',this.hitMeHandle)
         passButton.addEventListener('click',this.passHandle )
+
         turnStarted = shuffleReady
         .then(()=>{this.hitMeHandle()})
         .then(()=>{this.hitMeHandle()})
-        
-            if (this.score == 22){
-                this.playerWon = true
-            }
-        manager.gameArray[manager.gameIndexCounter].checkForWinnerOnStart()
-        turnStarted.then(()=> {playerScore.innerHTML = this.score})
+        .then(()=>{this.score == 22?this.playerWon = true:null})
+        .then(()=>{manager.gameArray[manager.gameIndexCounter].checkForWinnerOnStart()})
+        .then(()=> {playerScore.innerHTML = this.score})
     }
 
     endTurn(name=this.name) {
         this.isActive = false
+
         let hitMeButton = document.querySelector(`.${name}-hit-button`)
         let passButton = document.querySelector(`.${name}-fold-button`)
+
         hitMeButton.removeEventListener('click', this.hitMeHandle)
         passButton.removeEventListener('click', this.passHandle)
+
+
         if (manager.gameArray[manager.gameIndexCounter].singlePlayer){
             let  object  = manager.gameArray[manager.gameIndexCounter].playersIterator.next()
             object.value.artificialInteligence()
@@ -281,6 +276,7 @@ class Manager{
             let playerNames = []
             this.gameIndexCounter += 1
             let hero = prompt('What is Your Name', 'Hero')
+            // here is a bug - name must be starting with a letter becouse of Classnaming
             playerNames.push(hero)
             let singleOrMulti = prompt('Do you want to play alone, or with others(enter number)', 'yes')
             if (singleOrMulti.toLowerCase == 'yes'){
@@ -324,11 +320,5 @@ const deckReady = newDeck.getNewDeck()
 .then(()=> {newDeck.shuffle()})
 .then(()=> {manager.initialization()})
 .then(()=> {manager.newGame()})
-
-
-
-
-
-
 
 
