@@ -184,11 +184,11 @@ class Dealer {
     this.playerWon = false
     this.scoreToHit = 0
     this.chechIfDealerWon = this.chechIfDealerWon.bind(this)
+    this.dealerDraws = this.dealerDraws.bind(this)
     }
     
     artificialInteligence () {
         let playerScore = document.getElementsByTagName('p')
-        console.log(playerScore)
         this.scoreToHit = playerScore[1].innerHTML
         if (this.scoreToHit > 21){
             alert("Dealer is the winner")
@@ -304,8 +304,8 @@ class Player extends Dealer {
             playerCardsUl.appendChild(listElement)
             playerScore.innerHTML = this.score
             resolve()
-
-        })
+            })
+        .then(()=>{manager.gameArray[manager.gameIndexCounter].checkForWinnerOnStart()})
     })
 
         cardPromise.then(()=>{
@@ -335,9 +335,9 @@ class Player extends Dealer {
         turnStarted = shuffleReady
         .then(()=>{this.hitMeHandle()})
         .then(()=>{this.hitMeHandle()})
-        .then(()=>{this.score == 22?this.playerWon = true:null})
+        .then(()=>{this.score == 22?aler:null})
         .then(()=> {playerScore.innerHTML = this.score})
-        .then(()=>{manager.gameArray[manager.gameIndexCounter].checkForWinnerOnStart()})
+
 
     }
 
