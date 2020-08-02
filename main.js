@@ -227,7 +227,6 @@ class Dealer {
 
 
     chechIfDealerWon(){
-        console.log('this runs')
         if (this.score <= 21 && this.score > this.scoreToHit){
             console.log('scenario1 runs')
             alert("Dealer is the winner")
@@ -239,9 +238,8 @@ class Dealer {
         } else if(this.score > 21) {
             alert("You are the winner")
             return manager.replay() 
-        } else if (this.scoreToHit === this.score){
-            alert("Its a tie")
-            return manager.replay()
+        } else if (this.scoreToHit == this.score){
+            return dealer.dealerDraws()
         }
     }
 
@@ -288,8 +286,8 @@ class Player extends Dealer {
     hitMeHandle() {
         const playerCardsUl = document.querySelector(`.${this.name}-cards`)
         const playerScore = document.querySelector(`.${this.name}-score`)
-
         
+        const cardPromise = new Promise((resolve, reject)=> {
         fetch(`https://deckofcardsapi.com/api/deck/${newDeck.deckId}/draw/?count=1`)
         .then((response) => response.json())
         .then((data) => {
@@ -304,14 +302,20 @@ class Player extends Dealer {
             img.src =  cardUrl
             listElement.appendChild(img)
             playerCardsUl.appendChild(listElement)
+            playerScore.innerHTML = this.score
+            resolve()
+
         })
-        .then(()=> {playerScore.innerHTML = this.score})
-        .then(()=>{        
+    })
+
+        cardPromise.then(()=>{
             if (this.score > 21) {
             this.isActive = false
-            this.endTurn()
-        }})
+            return this.endTurn()
+        }
+    })
     }
+    
 
     passHandle(){
         this.endTurn()
@@ -346,7 +350,6 @@ class Player extends Dealer {
         hitMeButton.removeEventListener('click', this.hitMeHandle)
         passButton.removeEventListener('click', this.passHandle)
         playerDiv.classList.remove('active')
-
         if (manager.gameArray[manager.gameIndexCounter].singlePlayer){
             let  object  = manager.gameArray[manager.gameIndexCounter].playersIterator.next()
             object.value.artificialInteligence()
