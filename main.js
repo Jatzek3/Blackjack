@@ -3,6 +3,51 @@ let playersNode = document.querySelector('.players')
 let shuffleReady;
 let turnStarted;
 
+class Manager{
+    constructor(){
+        this.gameArray = []
+        this.gameIndexCounter = -1
+    }
+
+    initialization() {
+            let playerNames = []
+            this.gameIndexCounter += 1
+            let hero = prompt('What is Your Name', 'Hero')
+            // here is a bug - name must be starting with a letter becouse of Classnaming (regular expression)
+            playerNames.push(hero)
+            let singleOrMulti = prompt('Do you want to play alone, or with others(enter number)', 'yes')
+            if (singleOrMulti.toLowerCase == 'yes'){
+                this.gameArray.push(new Game(playerNames))
+            } else {
+                for (let i = 0; i < +singleOrMulti; i++ ){
+                    playerNames.push(`Player${i+1}`)
+                }
+                this.gameArray.push(new Game(playerNames))
+            }
+        }
+
+    newGame() {
+        this.gameArray[this.gameIndexCounter].startGame()
+        this.gameArray[this.gameIndexCounter].setupPlayers()
+        if (this.gameArray[this.gameIndexCounter].singlePlayer){
+            this.gameArray[this.gameIndexCounter].Players[1].startTurn()
+        } else {
+            let  object  = this.gameArray[this.gameIndexCounter].playersIterator.next()
+            object.value.startTurn()
+        }
+    }
+
+    replay() {
+        dealerNode.innerHTML =''
+        playersNode.innerHTML =''
+        let decision = prompt("Do you want to play a new game?",'yes')
+        if (decision || ''){
+            manager.initialization()
+            return manager.newGame()
+        }
+        alert("Goodbye")
+    }
+}
 
 
 class Game {
@@ -144,7 +189,8 @@ class Dealer {
     artificialInteligence () {
         // Add dom maniplation to display cards
         let playerScore = document.getElementsByTagName('p')
-        this.scoreToHit = playerScore[3].innerHTML
+        console.log(playerScore)
+        this.scoreToHit = playerScore[1].innerHTML
         if (this.scoreToHit > 21){
             alert("Dealer is the winner")
             return manager.replay()
@@ -154,14 +200,26 @@ class Dealer {
 
 
     dealerDraws(){
+        const dealerCardsUl = document.querySelector(`.${this.name}-cards`)
         let dealerScore = document.querySelector('.Dealer-score')
+
         if (this.score < this.scoreToHit){
         fetch(`https://deckofcardsapi.com/api/deck/${newDeck.deckId}/draw/?count=1`)
         .then((response) => response.json())
         .then((data) => {
+            const listElement = document.createElement('li')
+            let img  = document.createElement("IMG");
+
             const cardValue = data.cards[0].value
             const scoreValue = newDeck.values[cardValue]
-            this.score += scoreValue})
+            this.score += scoreValue
+
+            let cardUrl = data.cards[0].image
+            img.src =  cardUrl
+            listElement.appendChild(img)
+            dealerCardsUl.appendChild(listElement)
+        
+        })
         .then(()=> {dealerScore.innerHTML = this.score})
         .then(()=>{this.chechIfDealerWon()})
         .then(()=>{this.dealerDraws()})
@@ -230,15 +288,24 @@ class Player extends Dealer {
 
 
     hitMeHandle() {
-        // Add dom maniplation to display cards
-        let playerScore = document.querySelector(`.${this.name}-score`)
+        const playerCardsUl = document.querySelector(`.${this.name}-cards`)
+        const playerScore = document.querySelector(`.${this.name}-score`)
 
         fetch(`https://deckofcardsapi.com/api/deck/${newDeck.deckId}/draw/?count=1`)
         .then((response) => response.json())
         .then((data) => {
+            const listElement = document.createElement('li')
+            let img  = document.createElement("IMG");
+
             const cardValue = data.cards[0].value
             const scoreValue = newDeck.values[cardValue]
-            this.score += scoreValue})
+            this.score += scoreValue
+
+            let cardUrl = data.cards[0].image
+            img.src =  cardUrl
+            listElement.appendChild(img)
+            playerCardsUl.appendChild(listElement)
+        })
         .then(()=> {playerScore.innerHTML = this.score})
         .then(()=>{        
             if (this.score > 21) {
@@ -291,51 +358,6 @@ class Player extends Dealer {
     }
 }
 
-class Manager{
-    constructor(){
-        this.gameArray = []
-        this.gameIndexCounter = -1
-    }
-
-    initialization() {
-            let playerNames = []
-            this.gameIndexCounter += 1
-            let hero = prompt('What is Your Name', 'Hero')
-            // here is a bug - name must be starting with a letter becouse of Classnaming
-            playerNames.push(hero)
-            let singleOrMulti = prompt('Do you want to play alone, or with others(enter number)', 'yes')
-            if (singleOrMulti.toLowerCase == 'yes'){
-                this.gameArray.push(new Game(playerNames))
-            } else {
-                for (let i = 0; i < +singleOrMulti; i++ ){
-                    playerNames.push(`Player${i+1}`)
-                }
-                this.gameArray.push(new Game(playerNames))
-            }
-        }
-
-    newGame() {
-        this.gameArray[this.gameIndexCounter].startGame()
-        this.gameArray[this.gameIndexCounter].setupPlayers()
-        if (this.gameArray[this.gameIndexCounter].singlePlayer){
-            this.gameArray[this.gameIndexCounter].Players[1].startTurn()
-        } else {
-            let  object  = this.gameArray[this.gameIndexCounter].playersIterator.next()
-            object.value.startTurn()
-        }
-    }
-
-    replay() {
-        dealerNode.innerHTML =''
-        playersNode.innerHTML =''
-        let decision = prompt("Do you want to play a new game?",'yes')
-        if (decision || ''){
-            manager.initialization()
-            return manager.newGame()
-        }
-        alert("Goodbye")
-    }
-}
 
 
 let manager = new Manager()
