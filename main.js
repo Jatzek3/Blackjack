@@ -162,15 +162,12 @@ class Deck {
         .then((response) => response.json())
         .then((data) => {
             this.deckId = data.deck_id;
-            console.log('New deck festched',this.deckId)
             resolve()
         });
     } ) 
     
     shuffle(){
         fetch(`https://deckofcardsapi.com/api/deck/${this.deckId}/shuffle/`)
-        .then((response) => response.json())
-        .then((data) => {console.log('New deck shuffled',data)})
     }
 }
     
@@ -187,7 +184,6 @@ class Dealer {
     }
     
     artificialInteligence () {
-        // Add dom maniplation to display cards
         let playerScore = document.getElementsByTagName('p')
         console.log(playerScore)
         this.scoreToHit = playerScore[1].innerHTML
@@ -251,7 +247,6 @@ class Dealer {
         playerName.innerHTML =`${name}`
         playerName.className = `${name}-player`
         let cards = document.createElement('ul')
-        // append the child of img src 
         cards.className =`${name}-cards`
         let score = document.createElement('p')
         score.innerHTML = "00"
@@ -291,6 +286,7 @@ class Player extends Dealer {
         const playerCardsUl = document.querySelector(`.${this.name}-cards`)
         const playerScore = document.querySelector(`.${this.name}-score`)
 
+        
         fetch(`https://deckofcardsapi.com/api/deck/${newDeck.deckId}/draw/?count=1`)
         .then((response) => response.json())
         .then((data) => {
@@ -312,7 +308,6 @@ class Player extends Dealer {
             this.isActive = false
             this.endTurn()
         }})
-
     }
 
     passHandle(){
@@ -321,13 +316,14 @@ class Player extends Dealer {
 
     startTurn(name = this.name) {
         this.isActive = true 
-
+        let playerDiv = document.querySelector(`.${name}-player`)
         let playerScore = document.querySelector(`.${name}-score`)
         let hitMeButton = document.querySelector(`.${name}-hit-button`)
         let passButton = document.querySelector(`.${name}-fold-button`)
 
         hitMeButton.addEventListener('click',this.hitMeHandle)
         passButton.addEventListener('click',this.passHandle )
+        playerDiv.classList.add('active')
 
         turnStarted = shuffleReady
         .then(()=>{this.hitMeHandle()})
@@ -340,13 +336,13 @@ class Player extends Dealer {
 
     endTurn(name=this.name) {
         this.isActive = false
-
+        let playerDiv = document.querySelector(`.${name}-player`)
         let hitMeButton = document.querySelector(`.${name}-hit-button`)
         let passButton = document.querySelector(`.${name}-fold-button`)
 
         hitMeButton.removeEventListener('click', this.hitMeHandle)
         passButton.removeEventListener('click', this.passHandle)
-
+        playerDiv.classList.remove('active')
 
         if (manager.gameArray[manager.gameIndexCounter].singlePlayer){
             let  object  = manager.gameArray[manager.gameIndexCounter].playersIterator.next()
@@ -357,7 +353,6 @@ class Player extends Dealer {
         }
     }
 }
-
 
 
 let manager = new Manager()
