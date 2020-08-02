@@ -1,3 +1,7 @@
+html{
+    background-color: #a5ac8c;
+}
+
 ul{
     display: flex;
 }
@@ -6,10 +10,11 @@ ul li{
     height:4em;
 }
 .active {
-    background-color: aqua;
+    background-color: #fefae0;
+    border-radius: 50%;
 }
 img{
-    width: 100px;
+    width: 5em;
 }
 .dealer-button{
     display: flex;
@@ -20,7 +25,10 @@ img{
 .players{
     display: flex;
     flex-wrap: wrap;
-    flex-direction: column;
     justify-items: center;
     align-items: center;
+}
+.player{
+    width: 33%;
+    height: 14em;
 }

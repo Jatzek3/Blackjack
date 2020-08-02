@@ -246,7 +246,7 @@ class Dealer {
     createPlayer(name= this.name) {
         let playerName = document.createElement('div')
         playerName.innerHTML =`${name}`
-        playerName.className = `${name}-player`
+        playerName.className = `${name}`
         let cards = document.createElement('ul')
         cards.className =`${name}-cards`
         let score = document.createElement('p')
@@ -264,6 +264,7 @@ class Dealer {
             passButton.className = `${name}-fold-button`
             playerName.appendChild(hitButton)
             playerName.appendChild(passButton)
+            playerName.classList.add('player')
             }
         return playerName
     }
@@ -322,8 +323,9 @@ class Player extends Dealer {
     }
 
     startTurn(name = this.name) {
-        this.isActive = true 
-        let playerDiv = document.querySelector(`.${name}-player`)
+        this.isActive = true
+        console.log(name)
+        let playerDiv = document.querySelector(`.${name}`)
         let playerScore = document.querySelector(`.${name}-score`)
         let hitMeButton = document.querySelector(`.${name}-hit-button`)
         let passButton = document.querySelector(`.${name}-fold-button`)
@@ -343,7 +345,7 @@ class Player extends Dealer {
 
     endTurn(name=this.name) {
         this.isActive = false
-        let playerDiv = document.querySelector(`.${name}-player`)
+        let playerDiv = document.querySelector(`.${name}`)
         let hitMeButton = document.querySelector(`.${name}-hit-button`)
         let passButton = document.querySelector(`.${name}-fold-button`)
 
