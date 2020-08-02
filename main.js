@@ -65,12 +65,12 @@ class Game {
 
     }
         
-
-    checkForWinnerOnGameEnd() {     //  Serious Debug needed
+     //  Serious Debug needed
+    checkForWinnerOnGameEnd() {
 
         let playersLeft = this.Players.filter(player => player.score< 22)
         let winnerName='';
-        //  Compare this with AI
+        //  Compare this with AI if this method is really needed
         if (this.singlePlayer){
            this.Players[0].score > this.Players[1]?
            this.winner = this.Players[0].name:
@@ -142,7 +142,6 @@ class Dealer {
     }
     
     artificialInteligence () {
-        // The last card In AI must be visible, as well as players over 22
         // Add dom maniplation to display cards
         let playerScore = document.getElementsByTagName('p')
         this.scoreToHit = playerScore[3].innerHTML
@@ -193,8 +192,8 @@ class Dealer {
         let playerName = document.createElement('div')
         playerName.innerHTML =`${name}`
         playerName.className = `${name}-player`
-        let cards = document.createElement('p')
-        cards.innerHTML = `${name}'s cards`
+        let cards = document.createElement('ul')
+        // append the child of img src 
         cards.className =`${name}-cards`
         let score = document.createElement('p')
         score.innerHTML = "00"
@@ -231,7 +230,6 @@ class Player extends Dealer {
 
 
     hitMeHandle() {
-        // The last card In AI must be visible, as well as players over 22
         // Add dom maniplation to display cards
         let playerScore = document.querySelector(`.${this.name}-score`)
 
@@ -268,8 +266,9 @@ class Player extends Dealer {
         .then(()=>{this.hitMeHandle()})
         .then(()=>{this.hitMeHandle()})
         .then(()=>{this.score == 22?this.playerWon = true:null})
-        .then(()=>{manager.gameArray[manager.gameIndexCounter].checkForWinnerOnStart()})
         .then(()=> {playerScore.innerHTML = this.score})
+        .then(()=>{manager.gameArray[manager.gameIndexCounter].checkForWinnerOnStart()})
+
     }
 
     endTurn(name=this.name) {
