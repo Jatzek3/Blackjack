@@ -255,8 +255,9 @@ class Dealer {
         let score = document.createElement('p')
         score.innerHTML = "00"
         score.className = `${name}-score`
-        playerName.appendChild(cards)
         playerName.appendChild(score)
+        playerName.appendChild(cards)
+
 
             if (this instanceof Player) {
             let hitButton = document.createElement("BUTTON")

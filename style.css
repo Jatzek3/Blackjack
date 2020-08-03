@@ -1,7 +1,9 @@
+/* Initial settings */
 html{
     background-color: #a5ac8c;
 }
 
+/* List of cards */
 ul{
     display: flex;
 }
@@ -9,26 +11,51 @@ ul{
 ul li{
     height:4em;
 }
+
+img{
+    width: 5em;
+}
+
+/* Settings for Current player */
 .active {
     background-color: #fefae0;
     border-radius: 40%;
 }
-img{
-    width: 5em;
+
+.active button{
+    display: inline-block;
 }
+
+/* Dealer */
+
 .dealer-button{
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
 }
+
+/* All players container */
 .players{
     display: flex;
     flex-wrap: wrap;
     justify-items: center;
     align-items: center;
 }
+
+/* Settings for each player */
 .player{
     width: 33%;
     height: 14em;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.player button{
+    border-radius: 1em;
+    width: 6em;
+    display: none;
+
 }
