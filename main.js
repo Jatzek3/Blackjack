@@ -110,6 +110,7 @@ class Game {
          } else {
             const winningPlayer = this.Players.filter((player)=> player.playerWon)
             if (winningPlayer.length > 0){
+                console.log(winningPlayer)
                 this.winner = winningPlayer[0].name
                 this.endGame()
             } 
@@ -117,7 +118,6 @@ class Game {
 
     }
         
-     //  Serious Debug needed
     checkForWinnerOnGameEnd() {
 
         let playersLeft = this.Players.filter(player => player.score< 22)
@@ -132,7 +132,10 @@ class Game {
             let maxScore = 0;
             if (playersLeft.length)
             for (let i = 0; i < this.Players.length; i += 1){
-                if (this.Players[i].score === maxScore){
+                if (actualGame.Players.filter((player)=> player.playerWon)){
+                    return
+                }
+                else if (this.Players[i].score === maxScore){
                     this.tie = true
                 } else if (this.Players[i].score > maxScore 
                     && this.Players[i].score < 22) {
@@ -281,7 +284,8 @@ class Player extends Dealer {
         this.score = 0;
         this.isActive = false;
         this.playerWon = false;
-        this.playerLost = false
+        this.playerLost = false;
+        this.turnsStarted = -1
         this.passHandle = this.passHandle.bind(this);
         this.hitMeHandle = this.hitMeHandle.bind(this);
     }
@@ -307,13 +311,21 @@ class Player extends Dealer {
             listElement.appendChild(img)
             playerCardsUl.appendChild(listElement)
             playerScore.innerHTML = this.score
+            this.turnsStarted += 1
             resolve()
             })
         .then(()=>{actualGame.checkForWinnerOnStart()})
     })
 
         cardPromise.then(()=>{
-            if (this.score > 21) {
+            //  Persian Eye method
+            if (this.turnsStarted <= 0  && this.score === 22 ){
+                this.playerWon = true
+                console.log(this.playerWon, this.turnsStarted, this.score)
+                actualGame.checkForWinnerOnStart()
+            }
+            
+            if (this.score > 21 && this.turnsStarted > 0) {
             this.isActive = false
             return this.endTurn()
         }
@@ -341,8 +353,6 @@ class Player extends Dealer {
         .then(()=>{this.hitMeHandle()})
         .then(()=>{this.score == 22?aler:null})
         .then(()=> {playerScore.innerHTML = this.score})
-
-
     }
 
     endTurn(name=this.name) {
