@@ -84,9 +84,9 @@ class Game {
         actualGame = manager.gameArray[manager.gameIndexCounter]
         shuffleReady = deckReady.then(()=>{newDeck.shuffle()})
         if (this.playerNames.length === 1){
-            const dealer = new Dealer('Dealer')
+            const dealer:Dealer = new Dealer('Dealer')
             this.Players.push(dealer)
-            const player = new Player(this.playerNames[0])
+            const player:Player = new Player(this.playerNames[0])
             this.Players.push(player)
 
         } else{
@@ -109,7 +109,7 @@ class Game {
     }
 
     checkForWinnerOnStart() {
-        let playersLeft = this.Players.filter(player => player.score< 22)
+        let playersLeft:Player[] = this.Players.filter(player => player.score< 22)
         if (playersLeft.length === 1){
             this.winner = playersLeft[0].name
             alert(`And The winner is ${this.winner}`)
@@ -127,10 +127,10 @@ class Game {
         
     checkForWinnerOnGameEnd() {
 
-        let playersLeft = this.Players.filter(player => player.score< 22)
-        let winnerName='';
+        let playersLeft:HTMLElement[] = this.Players.filter(player => player.score< 22)
+        let winnerName:string ='';
 
-        let maxScore = 0;
+        let maxScore:number = 0;
         if (playersLeft.length > 1){
         for (let i = 0; i < this.Players.length; i += 1){
             if (this.Players[i].score === maxScore){
@@ -202,7 +202,7 @@ class Dealer {
     }
     
     artificialInteligence () {
-        let playerScore = document.getElementsByTagName('p')
+        let playerScore:any =  document.getElementsByTagName('p')
         this.scoreToHit = +playerScore[1].innerHTML
         if (this.scoreToHit > 21){
             alert("Dealer is the winner")
@@ -213,21 +213,21 @@ class Dealer {
 
 
     dealerDraws(){
-        const dealerCardsUl = document.querySelector(`.${this.name}-cards`)
-        let dealerScore = document.querySelector('.Dealer-score')
+        const dealerCardsUl:HTMLUListElement = document.querySelector(`.${this.name}-cards`)
+        let dealerScore:HTMLParagraphElement = document.querySelector('.Dealer-score')
 
         if (this.score <= this.scoreToHit){
         fetch(`https://deckofcardsapi.com/api/deck/${newDeck.deckId}/draw/?count=1`)
         .then((response) => response.json())
         .then((data) => {
-            const listElement = document.createElement('li')
+            const listElement:HTMLLIElement = document.createElement('li')
             let img:any  = document.createElement("IMG");
 
-            const cardValue = data.cards[0].value
-            const scoreValue = newDeck.values[cardValue]
+            const cardValue:string = data.cards[0].value
+            const scoreValue:number = newDeck.values[cardValue]
             this.score += scoreValue
 
-            let cardUrl = data.cards[0].image
+            let cardUrl:string = data.cards[0].image
             img.src =  cardUrl
             listElement.appendChild(img)
             dealerCardsUl.appendChild(listElement)
@@ -256,12 +256,12 @@ class Dealer {
     }
 
     createPlayer(name= this.name) {
-        let playerName = document.createElement('div')
+        let playerName:HTMLElement = document.createElement('div')
         playerName.innerHTML =`${name}`
         playerName.className = `${name}`
-        let cards = document.createElement('ul')
+        let cards:HTMLElement = document.createElement('ul')
         cards.className =`${name}-cards`
-        let score = document.createElement('p')
+        let score:HTMLElement = document.createElement('p')
         score.innerHTML = "00"
         score.className = `${name}-score`
         playerName.appendChild(score)
@@ -269,10 +269,10 @@ class Dealer {
 
 
             if (this instanceof Player) {
-            let hitButton = document.createElement("BUTTON")
+            let hitButton:HTMLElement = document.createElement("BUTTON")
             hitButton.innerHTML = 'Hit Me!'
             hitButton.className = `${name}-hit-button`
-            let passButton = document.createElement("BUTTON")
+            let passButton:HTMLElement = document.createElement("BUTTON")
             passButton.innerHTML = "Pass"
             passButton.className = `${name}-fold-button`
             playerName.appendChild(hitButton)
@@ -286,6 +286,8 @@ class Dealer {
 
 class Player extends Dealer {
     turnsStarted: number;
+
+
     constructor(name){
         super(name)
         this.name = name;
@@ -300,21 +302,21 @@ class Player extends Dealer {
 
 
     hitMeHandle() {
-        const playerCardsUl = document.querySelector(`.${this.name}-cards`)
-        const playerScore = document.querySelector(`.${this.name}-score`)
+        const playerCardsUl:HTMLDivElement = document.querySelector(`.${this.name}-cards`)
+        const playerScore:HTMLDivElement = document.querySelector(`.${this.name}-score`)
         
         const cardPromise = new Promise((resolve, reject)=> {
         fetch(`https://deckofcardsapi.com/api/deck/${newDeck.deckId}/draw/?count=1`)
         .then((response) => response.json())
         .then((data) => {
-            const listElement = document.createElement('li')
+            const listElement:HTMLLIElement = document.createElement('li')
             let img:any  = document.createElement("IMG");
 
-            const cardValue = data.cards[0].value
-            const scoreValue = newDeck.values[cardValue]
+            const cardValue:string = data.cards[0].value
+            const scoreValue:number = newDeck.values[cardValue]
             this.score += scoreValue
 
-            let cardUrl = data.cards[0].image
+            let cardUrl:string = data.cards[0].image
             img.src =  cardUrl
             listElement.appendChild(img)
             playerCardsUl.appendChild(listElement)
@@ -326,7 +328,6 @@ class Player extends Dealer {
     })
 
         cardPromise.then(()=>{
-            //  Persian Eye method
             if (this.turnsStarted <= 0  && this.score == 22 ){
                 alert(`Persian Eye ${this.name} Is the winner`)
                 return manager.replay()
@@ -346,10 +347,10 @@ class Player extends Dealer {
 
     startTurn(name = this.name) {
         this.isActive = true
-        let playerDiv = document.querySelector(`.${name}`)
-        let playerScore = document.querySelector(`.${name}-score`)
-        let hitMeButton = document.querySelector(`.${name}-hit-button`)
-        let passButton = document.querySelector(`.${name}-fold-button`)
+        let playerDiv:HTMLDivElement = document.querySelector(`.${name}`)
+        let playerScore:HTMLParagraphElement = document.querySelector(`.${name}-score`)
+        let hitMeButton:HTMLButtonElement = document.querySelector(`.${name}-hit-button`)
+        let passButton:HTMLButtonElement = document.querySelector(`.${name}-fold-button`)
 
         hitMeButton.addEventListener('click',this.hitMeHandle)
         passButton.addEventListener('click',this.passHandle )
@@ -363,9 +364,9 @@ class Player extends Dealer {
 
     endTurn(name=this.name) {
         this.isActive = false
-        let playerDiv = document.querySelector(`.${name}`)
-        let hitMeButton = document.querySelector(`.${name}-hit-button`)
-        let passButton = document.querySelector(`.${name}-fold-button`)
+        let playerDiv:HTMLDivElement = document.querySelector(`.${name}`)
+        let hitMeButton:HTMLButtonElement = document.querySelector(`.${name}-hit-button`)
+        let passButton:HTMLButtonElement = document.querySelector(`.${name}-fold-button`)
 
         hitMeButton.removeEventListener('click', this.hitMeHandle)
         passButton.removeEventListener('click', this.passHandle)
@@ -380,8 +381,8 @@ class Player extends Dealer {
     }
 }
 
-let manager = new Manager()
-let newDeck = new Deck()
+let manager:Manager = new Manager()
+let newDeck:Deck = new Deck()
 
 const deckReady = newDeck.getNewDeck()
 .then(()=> {newDeck.shuffle()})
