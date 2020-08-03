@@ -188,7 +188,7 @@ class Dealer {
     score: number;
     playerLost: boolean;
     playerWon: boolean;
-    scoreToHit: any;
+    scoreToHit: number;
 
     constructor(name){
     this.name = name
@@ -203,7 +203,7 @@ class Dealer {
     
     artificialInteligence () {
         let playerScore = document.getElementsByTagName('p')
-        this.scoreToHit = playerScore[1].innerHTML
+        this.scoreToHit = +playerScore[1].innerHTML
         if (this.scoreToHit > 21){
             alert("Dealer is the winner")
             return manager.replay()
@@ -221,7 +221,7 @@ class Dealer {
         .then((response) => response.json())
         .then((data) => {
             const listElement = document.createElement('li')
-            let img:any = document.createElement("IMG");
+            let img:any  = document.createElement("IMG");
 
             const cardValue = data.cards[0].value
             const scoreValue = newDeck.values[cardValue]
@@ -285,8 +285,7 @@ class Dealer {
 
 
 class Player extends Dealer {
-    turnsStarted:number
-
+    turnsStarted: number;
     constructor(name){
         super(name)
         this.name = name;
@@ -319,7 +318,7 @@ class Player extends Dealer {
             img.src =  cardUrl
             listElement.appendChild(img)
             playerCardsUl.appendChild(listElement)
-            playerScore.innerHTML = `{this.score}`
+            playerScore.innerHTML = `${this.score}`
             this.turnsStarted += 1
             resolve()
             })

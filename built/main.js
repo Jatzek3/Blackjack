@@ -162,7 +162,7 @@ class Dealer {
     }
     artificialInteligence() {
         let playerScore = document.getElementsByTagName('p');
-        this.scoreToHit = playerScore[1].innerHTML;
+        this.scoreToHit = +playerScore[1].innerHTML;
         if (this.scoreToHit > 21) {
             alert("Dealer is the winner");
             return manager.replay();
@@ -260,7 +260,7 @@ class Player extends Dealer {
                 img.src = cardUrl;
                 listElement.appendChild(img);
                 playerCardsUl.appendChild(listElement);
-                playerScore.innerHTML = `{this.score}`;
+                playerScore.innerHTML = `${this.score}`;
                 this.turnsStarted += 1;
                 resolve();
             })
