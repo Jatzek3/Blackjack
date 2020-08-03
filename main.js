@@ -124,15 +124,17 @@ class Game {
         if (playersLeft.length > 1){
         for (let i = 0; i < this.Players.length; i += 1){
                 if (this.Players[i].score === maxScore){
-                this.tie = true
+                    this.tie = true
+                    console.log(winnerName, this.tie)
             } else if (this.Players[i].score > maxScore 
                 && this.Players[i].score < 22) {
                 maxScore = this.Players[i].score
                 winnerName = this.Players[i].name
                 this.tie = false
+                console.log(winnerName, this.tie)
             }
         }
-    }
+    }  
         this.tie?this.winner ="It's a tie":this.winner = winnerName
     }
 
@@ -306,7 +308,6 @@ class Player extends Dealer {
     })
 
         cardPromise.then(()=>{
-            console.log(this.turnsStarted)
             //  Persian Eye method
             if (this.turnsStarted <= 0  && this.score == 22 ){
                 alert(`Persian Eye ${this.name} Is the winner`)
@@ -339,7 +340,6 @@ class Player extends Dealer {
         turnStarted = shuffleReady
         .then(()=>{this.hitMeHandle()})
         .then(()=>{this.hitMeHandle()})
-        .then(()=>{this.score == 22?aler:null})
         .then(()=> {playerScore.innerHTML = this.score})
     }
 
@@ -370,5 +370,3 @@ const deckReady = newDeck.getNewDeck()
 .then(()=> {newDeck.shuffle()})
 .then(()=> {manager.initialization()})
 .then(()=> {manager.newGame()})
-
-
