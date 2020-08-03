@@ -242,7 +242,7 @@ class Dealer {
             alert("You are the winner")
             return manager.replay() 
         } else if (this.scoreToHit == this.score){
-            return dealer.dealerDraws()
+            return actualGame.Players[0].dealerDraws()
         }
     }
 

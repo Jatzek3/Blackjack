@@ -1,6 +1,7 @@
 /* Initial settings */
 html{
     background-color: #a5ac8c;
+    font-family: 'Montserrat', sans-serif;
 }
 
 /* List of cards */
@@ -14,16 +15,6 @@ ul li{
 
 img{
     width: 5em;
-}
-
-/* Settings for Current player */
-.active {
-    background-color: #fefae0;
-    border-radius: 40%;
-}
-
-.active button{
-    display: inline-block;
 }
 
 /* Dealer */
@@ -41,9 +32,12 @@ img{
     flex-wrap: wrap;
     justify-items: center;
     align-items: center;
+    justify-content: center;
 }
 
 /* Settings for each player */
+
+
 .player{
     width: 33%;
     height: 14em;
@@ -51,11 +45,33 @@ img{
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    padding-top: 3em;
 }
+
 
 .player button{
     border-radius: 1em;
     width: 6em;
     display: none;
+}
 
+button:nth-child(3){
+    position: relative;
+    left: -3em;
+    top: 4.75em;
+}
+button:nth-child(4){
+    position: relative;
+    left: 3em;
+    top: 3.25em;
+}
+
+/* Settings for Current player */
+.active {
+    background-color: #fefae0;
+    border-radius: 40%;
+}
+
+.active button{
+    display: inline-block;
 }
