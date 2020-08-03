@@ -132,10 +132,7 @@ class Game {
             let maxScore = 0;
             if (playersLeft.length)
             for (let i = 0; i < this.Players.length; i += 1){
-                if (actualGame.Players.filter((player)=> player.playerWon)){
-                    return
-                }
-                else if (this.Players[i].score === maxScore){
+                 if (this.Players[i].score === maxScore){
                     this.tie = true
                 } else if (this.Players[i].score > maxScore 
                     && this.Players[i].score < 22) {
