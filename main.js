@@ -15,10 +15,12 @@ class Manager{
     initialization() {
             let playerNames = []
             this.gameIndexCounter += 1
+
             let hero = prompt('What is Your Name', 'Hero')
             let regex = new RegExp(validName)
             regex.test(hero)?null:hero = 'Hero'
             playerNames.push(hero)
+
             let singleOrMulti = prompt('Do you want to play alone, or with others(enter number(max8))', 'yes')
             if (singleOrMulti.toLowerCase == 'yes'){
                 this.gameArray.push(new Game(playerNames));
@@ -100,13 +102,9 @@ class Game {
         let playersLeft = this.Players.filter(player => player.score< 22)
         if (playersLeft.length === 1){
             this.winner = playersLeft[0].name
-            playersLeft[0].playerWon = true
-            this.endGame()
+            alert(`And The winner is ${this.winner}`)
+            manager.replay()
 
-        } else if (this.singlePlayer){
-            if (this.Players[0].playerWon){
-                this.winner = this.Players[0].name
-                this.endGame()}
          } else {
             const winningPlayer = this.Players.filter((player)=> player.playerWon)
             if (winningPlayer.length > 0){
@@ -115,33 +113,26 @@ class Game {
                 this.endGame()
             } 
         }
-
     }
         
     checkForWinnerOnGameEnd() {
 
         let playersLeft = this.Players.filter(player => player.score< 22)
         let winnerName='';
-        //  Compare this with AI if this method is really needed
-        if (this.singlePlayer){
-           this.Players[0].score > this.Players[1]?
-           this.winner = this.Players[0].name:
-           this.winner = this.Players[1].name
 
-        } else {
-            let maxScore = 0;
-            if (playersLeft.length)
-            for (let i = 0; i < this.Players.length; i += 1){
-                 if (this.Players[i].score === maxScore){
-                    this.tie = true
-                } else if (this.Players[i].score > maxScore 
-                    && this.Players[i].score < 22) {
-                    maxScore = this.Players[i].score
-                    winnerName = this.Players[i].name
-                    this.tie = false
-                }
+        let maxScore = 0;
+        if (playersLeft.length > 1){
+        for (let i = 0; i < this.Players.length; i += 1){
+                if (this.Players[i].score === maxScore){
+                this.tie = true
+            } else if (this.Players[i].score > maxScore 
+                && this.Players[i].score < 22) {
+                maxScore = this.Players[i].score
+                winnerName = this.Players[i].name
+                this.tie = false
             }
         }
+    }
         this.tie?this.winner ="It's a tie":this.winner = winnerName
     }
 
@@ -282,7 +273,7 @@ class Player extends Dealer {
         this.isActive = false;
         this.playerWon = false;
         this.playerLost = false;
-        this.turnsStarted = -1
+        this.turnsStarted = -2
         this.passHandle = this.passHandle.bind(this);
         this.hitMeHandle = this.hitMeHandle.bind(this);
     }
@@ -315,14 +306,14 @@ class Player extends Dealer {
     })
 
         cardPromise.then(()=>{
+            console.log(this.turnsStarted)
             //  Persian Eye method
-            if (this.turnsStarted <= 0  && this.score === 22 ){
-                this.playerWon = true
-                console.log(this.playerWon, this.turnsStarted, this.score)
-                actualGame.checkForWinnerOnStart()
+            if (this.turnsStarted <= 0  && this.score == 22 ){
+                alert(`Persian Eye ${this.name} Is the winner`)
+                manager.replay()
             }
-            
             if (this.score > 21 && this.turnsStarted > 0) {
+
             this.isActive = false
             return this.endTurn()
         }
