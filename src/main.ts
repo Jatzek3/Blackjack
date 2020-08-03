@@ -7,26 +7,29 @@ let actualGame;
 
 
 class Manager{
+    public gameArray: any[];
+    public gameIndexCounter: number;
+
     constructor(){
         this.gameArray = []
         this.gameIndexCounter = -1
     }
 
     initialization() {
-            let playerNames = []
+            let playerNames:any[] = []
             this.gameIndexCounter += 1
 
-            let hero = prompt('What is Your Name', 'Hero')
-            let regex = new RegExp(validName)
+            let hero:string = prompt('What is Your Name', 'Hero')
+            let regex:any = new RegExp(validName)
             regex.test(hero)?null:hero = 'Hero'
             playerNames.push(hero)
 
-            let singleOrMulti = prompt('Do you want to play alone, or with others(enter number(max8))', 'yes')
-            if (singleOrMulti.toLowerCase == 'yes'){
+            let singleOrMulti:any = prompt('Do you want to play alone, or with others(enter number(max8))', 'yes')
+            if (singleOrMulti.toLowerCase() == 'yes'){
                return this.gameArray.push(new Game(playerNames));
 
             } else {
-                singleOrMulti > 8?singleOrMulti = 8:null
+                (+singleOrMulti > 8)?singleOrMulti = 8:null
                 for (let i = 0; i < +singleOrMulti; i++ ){
                     playerNames.push(`Player${i+1}`)
                 }
@@ -59,6 +62,13 @@ class Manager{
 
 
 class Game {
+    playerNames:any;
+    Players: any[];
+    singlePlayer:boolean;
+    tie:boolean;
+    winner: string;
+    playersIterator:any;
+
     constructor(playerNames) {
         this.playerNames = playerNames
         this.Players = []
@@ -91,9 +101,9 @@ class Game {
         if (this.singlePlayer){
             dealerNode.appendChild(this.Players[0].createPlayer())
             playersNode.appendChild(this.Players[1].createPlayer())
-
+            return
         } else {
-        this.Players.map((player)=>
+        return this.Players.map((player)=>
         playersNode.appendChild(player.createPlayer()))
         }
     }
@@ -145,6 +155,9 @@ class Game {
 
 
 class Deck {
+    values: any;
+    deckId: string;
+
     constructor(){
         this.values = {'2' : 2, '3': 3, '4': 4, '5': 5,
          '6': 6, '7': 7, '8': 8, '9': 9, '10':10,
@@ -170,6 +183,13 @@ class Deck {
     
 
 class Dealer {
+    name:string;
+    isActive: boolean;
+    score: number;
+    playerLost: boolean;
+    playerWon: boolean;
+    scoreToHit: any;
+
     constructor(name){
     this.name = name
     this.isActive = false
@@ -201,7 +221,7 @@ class Dealer {
         .then((response) => response.json())
         .then((data) => {
             const listElement = document.createElement('li')
-            let img  = document.createElement("IMG");
+            let img:any = document.createElement("IMG");
 
             const cardValue = data.cards[0].value
             const scoreValue = newDeck.values[cardValue]
@@ -213,7 +233,7 @@ class Dealer {
             dealerCardsUl.appendChild(listElement)
         
         })
-        .then(()=> {dealerScore.innerHTML = this.score})
+        .then(()=> {dealerScore.innerHTML = `${this.score}`})
         .then(()=>{this.chechIfDealerWon()})
         .then(()=>{this.dealerDraws()})
         }
@@ -265,8 +285,10 @@ class Dealer {
 
 
 class Player extends Dealer {
+    turnsStarted:number
+
     constructor(name){
-        super()
+        super(name)
         this.name = name;
         this.score = 0;
         this.isActive = false;
@@ -287,7 +309,7 @@ class Player extends Dealer {
         .then((response) => response.json())
         .then((data) => {
             const listElement = document.createElement('li')
-            let img  = document.createElement("IMG");
+            let img:any  = document.createElement("IMG");
 
             const cardValue = data.cards[0].value
             const scoreValue = newDeck.values[cardValue]
@@ -297,7 +319,7 @@ class Player extends Dealer {
             img.src =  cardUrl
             listElement.appendChild(img)
             playerCardsUl.appendChild(listElement)
-            playerScore.innerHTML = this.score
+            playerScore.innerHTML = `{this.score}`
             this.turnsStarted += 1
             resolve()
             })
@@ -337,7 +359,7 @@ class Player extends Dealer {
         return turnStarted = shuffleReady
         .then(()=>{this.hitMeHandle()})
         .then(()=>{this.hitMeHandle()})
-        .then(()=> {playerScore.innerHTML = this.score})
+        .then(()=> {playerScore.innerHTML = `${this.score}`})
     }
 
     endTurn(name=this.name) {
@@ -358,7 +380,6 @@ class Player extends Dealer {
         }
     }
 }
-
 
 let manager = new Manager()
 let newDeck = new Deck()
