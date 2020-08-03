@@ -205,7 +205,7 @@ class Dealer {
         const dealerCardsUl = document.querySelector(`.${this.name}-cards`)
         let dealerScore = document.querySelector('.Dealer-score')
 
-        if (this.score < this.scoreToHit){
+        if (this.score <= this.scoreToHit){
         fetch(`https://deckofcardsapi.com/api/deck/${newDeck.deckId}/draw/?count=1`)
         .then((response) => response.json())
         .then((data) => {
@@ -230,6 +230,7 @@ class Dealer {
 
 
     chechIfDealerWon(){
+        console.log(this.score, this.scoreToHit)
         if (this.score <= 21 && this.score > this.scoreToHit){
             console.log('scenario1 runs')
             alert("Dealer is the winner")
@@ -241,8 +242,6 @@ class Dealer {
         } else if(this.score > 21) {
             alert("You are the winner")
             return manager.replay() 
-        } else if (this.scoreToHit == this.score){
-            return actualGame.Players[0].dealerDraws()
         }
     }
 

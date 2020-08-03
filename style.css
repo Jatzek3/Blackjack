@@ -75,3 +75,16 @@ button:nth-child(4){
 .active button{
     display: inline-block;
 }
+
+@media (max-width: 1200px){
+    .player{
+        width: 50%;
+    }
+
+}
+@media (max-width: 600px){
+    .player{
+        width: 100%;
+    }
+
+}
