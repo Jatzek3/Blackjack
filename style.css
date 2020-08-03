@@ -11,7 +11,7 @@ ul li{
 }
 .active {
     background-color: #fefae0;
-    border-radius: 50%;
+    border-radius: 40%;
 }
 img{
     width: 5em;
