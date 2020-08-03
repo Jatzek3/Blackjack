@@ -23,14 +23,14 @@ class Manager{
 
             let singleOrMulti = prompt('Do you want to play alone, or with others(enter number(max8))', 'yes')
             if (singleOrMulti.toLowerCase == 'yes'){
-                this.gameArray.push(new Game(playerNames));
+               return this.gameArray.push(new Game(playerNames));
 
             } else {
                 singleOrMulti > 8?singleOrMulti = 8:null
                 for (let i = 0; i < +singleOrMulti; i++ ){
                     playerNames.push(`Player${i+1}`)
                 }
-                this.gameArray.push(new Game(playerNames))
+                return this.gameArray.push(new Game(playerNames))
             }
         }
 
@@ -38,10 +38,10 @@ class Manager{
         this.gameArray[this.gameIndexCounter].startGame()
         this.gameArray[this.gameIndexCounter].setupPlayers()
         if (this.gameArray[this.gameIndexCounter].singlePlayer){
-            this.gameArray[this.gameIndexCounter].Players[1].startTurn()
+            return this.gameArray[this.gameIndexCounter].Players[1].startTurn()
         } else {
             let  object  = this.gameArray[this.gameIndexCounter].playersIterator.next()
-            object.value.startTurn()
+            return object.value.startTurn()
         }
     }
 
@@ -53,7 +53,7 @@ class Manager{
             manager.initialization()
             return manager.newGame()
         }
-        alert("Goodbye")
+        return alert("Goodbye")
     }
 }
 
@@ -103,14 +103,14 @@ class Game {
         if (playersLeft.length === 1){
             this.winner = playersLeft[0].name
             alert(`And The winner is ${this.winner}`)
-            manager.replay()
+            return manager.replay()
 
          } else {
             const winningPlayer = this.Players.filter((player)=> player.playerWon)
             if (winningPlayer.length > 0){
                 console.log(winningPlayer)
                 this.winner = winningPlayer[0].name
-                this.endGame()
+                return this.endGame()
             } 
         }
     }
@@ -123,25 +123,23 @@ class Game {
         let maxScore = 0;
         if (playersLeft.length > 1){
         for (let i = 0; i < this.Players.length; i += 1){
-                if (this.Players[i].score === maxScore){
+            if (this.Players[i].score === maxScore){
                     this.tie = true
-                    console.log(winnerName, this.tie)
             } else if (this.Players[i].score > maxScore 
                 && this.Players[i].score < 22) {
                 maxScore = this.Players[i].score
                 winnerName = this.Players[i].name
                 this.tie = false
-                console.log(winnerName, this.tie)
             }
         }
     }  
-        this.tie?this.winner ="It's a tie":this.winner = winnerName
+    return this.tie?this.winner ="It's a tie":this.winner = winnerName
     }
 
     endGame(){
         this.checkForWinnerOnGameEnd()
         alert(`And The winner is ${this.winner}`)
-        manager.replay()
+        return manager.replay()
     }
 }
 
@@ -190,7 +188,7 @@ class Dealer {
             alert("Dealer is the winner")
             return manager.replay()
         }
-        this.dealerDraws()
+        return this.dealerDraws()
         }
 
 
@@ -223,7 +221,6 @@ class Dealer {
 
 
     chechIfDealerWon(){
-        console.log(this.score, this.scoreToHit)
         if (this.score <= 21 && this.score > this.scoreToHit){
             console.log('scenario1 runs')
             alert("Dealer is the winner")
@@ -261,7 +258,7 @@ class Dealer {
             playerName.appendChild(hitButton)
             playerName.appendChild(passButton)
             playerName.classList.add('player')
-            }
+        }
         return playerName
     }
 }
@@ -311,7 +308,7 @@ class Player extends Dealer {
             //  Persian Eye method
             if (this.turnsStarted <= 0  && this.score == 22 ){
                 alert(`Persian Eye ${this.name} Is the winner`)
-                manager.replay()
+                return manager.replay()
             }
             if (this.score > 21 && this.turnsStarted > 0) {
 
@@ -323,7 +320,7 @@ class Player extends Dealer {
     
 
     passHandle(){
-        this.endTurn()
+        return this.endTurn()
     }
 
     startTurn(name = this.name) {
@@ -337,7 +334,7 @@ class Player extends Dealer {
         passButton.addEventListener('click',this.passHandle )
         playerDiv.classList.add('active')
 
-        turnStarted = shuffleReady
+        return turnStarted = shuffleReady
         .then(()=>{this.hitMeHandle()})
         .then(()=>{this.hitMeHandle()})
         .then(()=> {playerScore.innerHTML = this.score})
@@ -354,10 +351,10 @@ class Player extends Dealer {
         playerDiv.classList.remove('active')
         if (actualGame.singlePlayer){
             let  object  = actualGame.playersIterator.next()
-            object.value.artificialInteligence()
+            return object.value.artificialInteligence()
         } else {
             let  object = actualGame.playersIterator.next()
-            !object.done?object.value.startTurn():actualGame.endGame()
+            return !object.done?object.value.startTurn():actualGame.endGame()
         }
     }
 }
