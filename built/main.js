@@ -13,7 +13,7 @@ class Manager {
         let playerNames = [];
         this.gameIndexCounter += 1;
         let hero = prompt('What is Your Name', 'Hero');
-        let regex = new RegExp(validName);
+        const regex = new RegExp(validName);
         regex.test(hero) ? null : hero = 'Hero';
         playerNames.push(hero);
         let singleOrMulti = prompt('Do you want to play alone, or with others(enter number(max8))', 'yes');
@@ -35,7 +35,7 @@ class Manager {
             return this.gameArray[this.gameIndexCounter].Players[1].startTurn();
         }
         else {
-            let object = this.gameArray[this.gameIndexCounter].playersIterator.next();
+            const object = this.gameArray[this.gameIndexCounter].playersIterator.next();
             return object.value.startTurn();
         }
     }
@@ -88,7 +88,7 @@ class Game {
         }
     }
     checkForWinnerOnStart() {
-        let playersLeft = this.Players.filter(player => player.score < 22);
+        const playersLeft = this.Players.filter(player => player.score < 22);
         if (playersLeft.length === 1) {
             this.winner = playersLeft[0].name;
             alert(`And The winner is ${this.winner}`);
