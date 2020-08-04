@@ -267,7 +267,6 @@ class Player extends Dealer {
                 .then(() => { actualGame.checkForWinnerOnStart(); });
         });
         cardPromise.then(() => {
-            //  Persian Eye method
             if (this.turnsStarted <= 0 && this.score == 22) {
                 alert(`Persian Eye ${this.name} Is the winner`);
                 return manager.replay();
