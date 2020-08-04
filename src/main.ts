@@ -4,6 +4,8 @@ let shuffleReady;
 let turnStarted: Function;
 let actualGame: Game;
 
+type strOrInt = string | number;
+
 class Manager {
 	public gameArray: Game[];
 	public gameIndexCounter: number;
@@ -22,7 +24,7 @@ class Manager {
 		regex.test(hero) ? null : (hero = 'Hero');
 		playerNames.push(hero);
 
-		let singleOrMulti: any /*add alias*/ = prompt(
+		let singleOrMulti: strOrInt = prompt(
 			'Do you want to play alone, or with others(enter number(max8))',
 			'yes',
 		);
@@ -38,14 +40,13 @@ class Manager {
 	}
 
 	newGame() {
-		this.gameArray[this.gameIndexCounter].startGame();
-		this.gameArray[this.gameIndexCounter].setupPlayers();
-		if (this.gameArray[this.gameIndexCounter].singlePlayer) {
-			return this.gameArray[this.gameIndexCounter].Players[1].startTurn();
+		let currentGame = this.gameArray[this.gameIndexCounter];
+		currentGame.startGame();
+		currentGame.setupPlayers();
+		if (currentGame.singlePlayer) {
+			return currentGame.Players[1].startTurn();
 		} else {
-			const object = this.gameArray[
-				this.gameIndexCounter
-			].playersIterator.next();
+			const object = currentGame.playersIterator.next();
 			return object.value.startTurn();
 		}
 	}
@@ -64,7 +65,7 @@ class Manager {
 
 class Game {
 	playerNames: string[];
-	Players: any[]; //tutaj będzie type alias
+	Players: any[];
 	singlePlayer: boolean;
 	tie: boolean;
 	winner: string;
@@ -83,9 +84,7 @@ class Game {
 
 	startGame() {
 		actualGame = manager.gameArray[manager.gameIndexCounter];
-		shuffleReady = deckReady.then(() => {
-			newDeck.shuffle();
-		});
+		shuffleReady = deckReady.then(() => newDeck.shuffle());
 		if (this.playerNames.length === 1) {
 			const dealer: Dealer = new Dealer('Dealer');
 			this.Players.push(dealer);
@@ -194,7 +193,8 @@ class Deck {
 				.then((data) => {
 					this.deckId = data.deck_id;
 					resolve();
-				});
+				})
+				.catch(() => 'error while fetching a deck');
 		});
 
 	shuffle() {
@@ -257,15 +257,10 @@ class Dealer {
 					listElement.appendChild(img);
 					dealerCardsUl.appendChild(listElement);
 				})
-				.then(() => {
-					dealerScore.innerHTML = `${this.score}`;
-				})
-				.then(() => {
-					this.chechIfDealerWon();
-				})
-				.then(() => {
-					this.dealerDraws();
-				});
+				.then(() => (dealerScore.innerHTML = `${this.score}`))
+				.then(() => this.chechIfDealerWon())
+				.then(() => this.dealerDraws())
+				.catch(() => alert('error while drawing a card'));
 		}
 	}
 
@@ -355,9 +350,8 @@ class Player extends Dealer {
 					this.turnsStarted += 1;
 					resolve();
 				})
-				.then(() => {
-					actualGame.checkForWinnerOnStart();
-				});
+				.then(() => actualGame.checkForWinnerOnStart())
+				.catch(() => alert('error while drawing a card'));
 		});
 
 		cardPromise.then(() => {
@@ -394,15 +388,10 @@ class Player extends Dealer {
 		playerDiv.classList.add('active');
 
 		return (turnStarted = shuffleReady
-			.then(() => {
-				this.hitMeHandle();
-			})
-			.then(() => {
-				this.hitMeHandle();
-			})
-			.then(() => {
-				playerScore.innerHTML = `${this.score}`;
-			}));
+			.then(() => this.hitMeHandle())
+			.then(() => this.hitMeHandle())
+			.then(() => (playerScore.innerHTML = `${this.score}`))
+			.catch(() => alert('error on start')));
 	}
 
 	endTurn(name = this.name) {
