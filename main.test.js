@@ -1,23 +1,18 @@
-let {
-  Manager,
-  Game,
-  Deck,
-  Dealer,
-  Player,
-  validName,
-  actualGame,
-  turnStarted,
-  shuffleReady,
-  playersNode,
-  dealerNode,
-} = require('./main.js');
-const { TestScheduler } = require('jest');
+const fetch = require('node-fetch');
+let dealerNode = document.querySelector('.dealer-button');
+let playersNode = document.querySelector('.players');
+let shuffleReady;
+let turnStarted;
+let actualGame;
 
-beforeEach(() => {
+let { Manager, Game, Deck, Dealer, Player, validName } = require('./main.js');
+
+beforeEach((done) => {
   let manager = new Manager();
   let newDeck = new Deck();
   const deckReady = newDeck
     .getNewDeck()
+    .then(() => console.log('manager', manager))
     .then(() => {
       newDeck.shuffle();
     })
@@ -27,8 +22,7 @@ beforeEach(() => {
     .then(() => {
       manager.newGame();
     })
-    .catch(() => console.log('errpr on '));
-  console.log('setup ready');
+    .catch((error) => console.log(done(error)));
 });
 
 const sum = (x, y) => x + y;
