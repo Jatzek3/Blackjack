@@ -1,0 +1,23 @@
+{
+  "name": "BlackJack",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Jatzek3/Blackjack.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Jatzek3/Blackjack/issues"
+  },
+  "homepage": "https://github.com/Jatzek3/Blackjack#readme",
+  "dependencies": {
+    "jest": "^26.2.2"
+  }
+}
