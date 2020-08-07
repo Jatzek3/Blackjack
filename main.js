@@ -1,5 +1,5 @@
 // node dont support fatch so this is needed for tests
-const fetch = require('node-fetch');
+// const fetch = require('node-fetch');
 
 let dealerNode = document.querySelector('.dealer-button');
 let playersNode = document.querySelector('.players');
