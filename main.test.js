@@ -6,12 +6,14 @@ beforeEach((done) => {
     "<div class='dealer-button'></div>" + "<div class='players'><div>";
 
   return new Promise((resolve, reject) => {
+    jest.setTimeout(30000);
     let dealerNode = document.querySelector('.dealer-button');
     let playersNode1 = document.querySelector('.players');
     console.log(playersNode1);
     playersNode = jest.fn();
     playersNode.mockReturnValueOnce(playersNode1);
     window.prompt = jest.fn(() => '6');
+    window.alert = jest.fn(() => 'asdsads');
     let manager = new Manager();
     let newDeck = new Deck();
     const deckReady = newDeck

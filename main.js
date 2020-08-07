@@ -74,6 +74,7 @@ class Game {
   }
 
   startGame() {
+    console.log('game starts');
     actualGame = manager.gameArray[manager.gameIndexCounter];
     shuffleReady = deckReady.then(() => newDeck.shuffle());
     if (this.playerNames.length === 1) {
@@ -90,6 +91,7 @@ class Game {
   }
 
   setupPlayers() {
+    console.log('players setup');
     dealerNode = document.querySelector('.dealer-button');
     playersNode = document.querySelector('.players');
     if (this.singlePlayer) {
@@ -104,6 +106,7 @@ class Game {
   }
 
   checkForWinnerOnStart() {
+    console.log('check for winners on start');
     const playersLeft = this.Players.filter((player) => player.score < 22);
     if (playersLeft.length === 1) {
       this.winner = playersLeft[0].name;
@@ -120,6 +123,7 @@ class Game {
   }
 
   checkForWinnerOnGameEnd() {
+    console.log('checkFor winner on end');
     let playersLeft = this.Players.filter((player) => player.score < 22);
     let winnerName = '';
     let maxScore = 0;
@@ -141,6 +145,7 @@ class Game {
   }
 
   endGame() {
+    console.log('end game');
     this.checkForWinnerOnGameEnd();
     alert(`And The winner is ${this.winner}`);
     return manager.replay();
@@ -291,6 +296,7 @@ class Player extends Dealer {
   }
 
   hitMeHandle() {
+    console.log('cardDrawn');
     const playerCardsUl = document.querySelector(`.${this.name}-cards`);
     const playerScore = document.querySelector(`.${this.name}-score`);
     const cardPromise = new Promise((resolve, reject) => {
@@ -392,9 +398,4 @@ module.exports = {
   Dealer,
   Player,
   validName,
-  actualGame,
-  turnStarted,
-  shuffleReady,
-  playersNode,
-  dealerNode,
 };
