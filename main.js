@@ -1,6 +1,6 @@
 // node dont support fatch so this is needed for tests
 // romove comments from first lines to run game
-const fetch = require('node-fetch');
+// const fetch = require('node-fetch');
 
 let dealerNode; // = document.querySelector('.dealer-button');
 let playersNode; // = document.querySelector('.players');
@@ -67,7 +67,6 @@ class Game {
     this.playerNames = playerNames;
     this.Players = [];
     this.singlePlayer = true;
-    this.tie = false;
     this.winner = '';
     this.playersIterator = this.Players[Symbol.iterator]();
     this.checkForWinnerOnStart = this.checkForWinnerOnStart.bind(this);
@@ -124,26 +123,26 @@ class Game {
     let playersLeft = this.Players.filter((player) => player.score < 22);
     let winnerName = '';
     let maxScore = 0;
+    let tie = false;
     if (playersLeft.length > 1) {
       for (let i = 0; i < this.Players.length; i += 1) {
         if (this.Players[i].score === maxScore) {
-          this.tie = true;
+          tie = true;
         } else if (
           this.Players[i].score > maxScore &&
           this.Players[i].score < 22
         ) {
           maxScore = this.Players[i].score;
           winnerName = this.Players[i].name;
-          this.tie = false;
+          tie = false;
         }
       }
     }
-    return this.tie ? (this.winner = "It's a tie") : (this.winner = winnerName);
+    return tie ? (this.winner = "It's a tie") : (this.winner = winnerName);
   }
 
-  endGame() {
-    console.log('end game');
-    this.checkForWinnerOnGameEnd();
+  async endGame() {
+    await this.checkForWinnerOnGameEnd();
     alert(`And The winner is ${this.winner}`);
     return manager.replay();
   }

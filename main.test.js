@@ -6,7 +6,7 @@ afterEach(() => {
 });
 
 describe('testing initialization', () => {
-  test('testing initializaton of the game', async () => {
+  test('testing initializaton of the game', async function Init() {
     // Initialization
     document.body.innerHTML =
       "<div class='dealer-button'></div>" + "<div class='players'><div>";
