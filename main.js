@@ -1,8 +1,10 @@
 // node dont support fatch so this is needed for tests
-// const fetch = require('node-fetch');
+// romove comments from first lines to run game
+const fetch = require('node-fetch');
 
-let dealerNode = document.querySelector('.dealer-button');
-let playersNode = document.querySelector('.players');
+let dealerNode; // = document.querySelector('.dealer-button');
+let playersNode; // = document.querySelector('.players');
+
 let shuffleReady;
 let turnStarted;
 let actualGame;
@@ -88,6 +90,8 @@ class Game {
   }
 
   setupPlayers() {
+    dealerNode = document.querySelector('.dealer-button');
+    playersNode = document.querySelector('.players');
     if (this.singlePlayer) {
       dealerNode.appendChild(this.Players[0].createPlayer());
       playersNode.appendChild(this.Players[1].createPlayer());
