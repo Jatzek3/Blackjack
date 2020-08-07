@@ -349,7 +349,6 @@ class Player extends Dealer {
       .then(() => this.hitMeHandle())
       .then(() => this.hitMeHandle())
       .then(() => (playerScore.innerHTML = `${this.score}`))
-      .then(() => console.log('returned'))
       .catch(() => {}));
   }
 
