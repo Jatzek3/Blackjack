@@ -45,8 +45,20 @@ afterEach(() => {
   window.prompt.mockClear();
 });
 
-const sum = (x, y) => x + y;
+describe('testing initialization', () => {
+  test('testing singleplayer with default name', () => {
+    let manager = new Manager();
+    expect(manager.initialization()).toBe(1);
+  });
 
-test('checking test', () => {
-  expect(sum(1, 2)).toBe(3);
+  // test('testing newGame', () => {
+  //   let manager = new Manager();
+  //   manager.gameArray = [];
+  //   manager.gameIndexCounter = 0;
+  //   manager.gameArray.push(new Game());
+  //   manager.gameArray[0].startGame = jest.fn();
+  //   manager.gameArray[0].setupPlayers = jest.fn();
+  //   manager.gameArray[0].Players[new Player()];
+  //   expect(manager.newGame()).toBe(1);
+  // });
 });
