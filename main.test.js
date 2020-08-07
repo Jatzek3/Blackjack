@@ -8,21 +8,36 @@ let actualGame;
 let { Manager, Game, Deck, Dealer, Player, validName } = require('./main.js');
 
 beforeEach((done) => {
-  let manager = new Manager();
-  let newDeck = new Deck();
-  const deckReady = newDeck
-    .getNewDeck()
-    .then(() => console.log('manager', manager))
-    .then(() => {
-      newDeck.shuffle();
-    })
-    .then(() => {
-      manager.initialization();
-    })
-    .then(() => {
-      manager.newGame();
-    })
-    .catch((error) => console.log(done(error)));
+  return new Promise((resolve, reject) => {
+    dealer = document.createElement('div');
+    dealer.classList.add('dealer-button');
+    player = document.createElement('div');
+    player.classList.add('players');
+    document.body.appendChild(dealer);
+    document.body.appendChild(player);
+    dealerNode = jest.fn(() => dealer);
+    playersNode = jest.fn(() => player);
+    window.prompt = jest.fn(() => '6');
+    let manager = new Manager();
+    let newDeck = new Deck();
+    const deckReady = newDeck
+      .getNewDeck()
+      .then(() => {
+        newDeck.shuffle();
+      })
+      .then(() => {
+        manager.initialization();
+      })
+      .then(() => {
+        manager.newGame();
+      })
+      .catch((error) => console.log(done(error)));
+    resolve();
+  });
+});
+
+afterEach(() => {
+  window.prompt.mockClear();
 });
 
 const sum = (x, y) => x + y;
