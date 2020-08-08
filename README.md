@@ -5,6 +5,7 @@ You can play the game on  https://jatzek3.github.io/Blackjack/
 
 ## Rules & Gameplay
 
+Main deck consist of 6 decks so dont be suprised when you will see two cards of same suit and value. 
 You can choose between single player game or multiplayer game with custom amount players.
 Each card is worth point value according to its number. If it is a face card or an ace the points are as follows:
 - Jack - 2 points
