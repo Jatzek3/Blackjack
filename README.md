@@ -7,10 +7,10 @@ You can play the game on  https://jatzek3.github.io/Blackjack/
 
 You can choose between single player game or multiplayer game with custom amount players.
 Each card is worth point value according to its number. If it is a face card or an ace the points are as follows:
-Jack - 2 points
-Queen - 3 points
-King - 4 points
-Ace - 11 points
+- Jack - 2 points
+- Queen - 3 points
+- King - 4 points
+- Ace - 11 points
 
 ### Single Player
  - If you choose to play against AI you will be the first to draw cards. If the cards are two aces  you win instantly and the game is ended. 
