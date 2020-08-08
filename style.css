@@ -49,20 +49,21 @@ img {
 
 .player button {
   border-radius: 1em;
-  width: 6em;
+  width: 10em;
+  height: 4em;
   display: none;
   cursor: pointer;
 }
 
 button:nth-child(3) {
   position: relative;
-  left: -3em;
-  top: 4.8em;
+  left: -5em;
+  top: 5.15em;
 }
 button:nth-child(4) {
   position: relative;
-  left: 3em;
-  top: 3.25em;
+  left: 5em;
+  top: 3em;
 }
 
 /* Settings for Current player */
