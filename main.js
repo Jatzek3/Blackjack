@@ -42,7 +42,6 @@ class Manager {
     currentGame.startGame();
     currentGame.setupPlayers();
     if (currentGame.singlePlayer) {
-      console.log('this');
       return currentGame.Players[1].startTurn();
     } else {
       const object = currentGame.playersIterator.next();
@@ -294,30 +293,22 @@ class Player extends Dealer {
   hitMeHandle() {
     const playerCardsUl = document.querySelector(`.${this.name}-cards`);
     const playerScore = document.querySelector(`.${this.name}-score`);
-    const cardPromise = new Promise((resolve, reject) => {
-      fetch(
-        `https://deckofcardsapi.com/api/deck/${newDeck.deckId}/draw/?count=1`,
-      )
-        .then((response) => response.json())
-        .then((data) => {
-          const listElement = document.createElement('li');
-          let img = document.createElement('IMG');
-          const cardValue = data.cards[0].value;
-          const scoreValue = newDeck.values[cardValue];
-          this.score += scoreValue;
-          let cardUrl = data.cards[0].image;
-          img.src = cardUrl;
-          listElement.appendChild(img);
-          playerCardsUl.appendChild(listElement);
-          playerScore.innerHTML = `${this.score}`;
-          this.turnsStarted += 1;
-          resolve();
-        })
-        .then(() => actualGame.checkForWinnerOnStart())
-        .catch(() => {});
-    });
-
-    cardPromise
+    fetch(`https://deckofcardsapi.com/api/deck/${newDeck.deckId}/draw/?count=1`)
+      .then((response) => response.json())
+      .then((data) => {
+        const listElement = document.createElement('li');
+        let img = document.createElement('IMG');
+        const cardValue = data.cards[0].value;
+        const scoreValue = newDeck.values[cardValue];
+        this.score += scoreValue;
+        let cardUrl = data.cards[0].image;
+        img.src = cardUrl;
+        listElement.appendChild(img);
+        playerCardsUl.appendChild(listElement);
+        playerScore.innerHTML = `${this.score}`;
+        this.turnsStarted += 1;
+      })
+      .then(() => actualGame.checkForWinnerOnStart())
       .then(() => {
         if (this.turnsStarted <= 0 && this.score == 22) {
           alert(`Persian Eye ${this.name} Is the winner`);
@@ -325,6 +316,7 @@ class Player extends Dealer {
         }
         if (this.score > 21 && this.turnsStarted > 0) {
           this.isActive = false;
+          console.log('this fires');
           return this.endTurn();
         }
       })
