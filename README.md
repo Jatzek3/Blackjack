@@ -2,6 +2,7 @@
 
 This repository holds files to game of blackjack created for Profil Software internship task.
 You can play the game on  https://jatzek3.github.io/Blackjack/
+Game experience may differ across the browsers.
 
 ## Rules & Gameplay
 
