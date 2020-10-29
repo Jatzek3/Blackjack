@@ -1,3 +1,5 @@
+Interesting Code -> https://github.com/Jatzek3/Blackjack/blob/master/main.js
+
 # Blackjack
 
 This repository holds files to game of blackjack created for Profil Software internship task.
