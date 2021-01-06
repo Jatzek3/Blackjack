@@ -18,7 +18,7 @@
   },
   "homepage": "https://github.com/Jatzek3/Blackjack#readme",
   "dependencies": {
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "jest": "^26.2.2",
     "node-fetch": "^2.6.1"
   }
